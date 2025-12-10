@@ -1,0 +1,232 @@
+{
+  "wires": [
+    {
+      "questId": "ss10y",
+      "questName": "After Rain Comes",
+      "trader": "Celeste",
+      "quantity": 5,
+      "isMain": false
+    },
+    {
+      "questId": "ss3",
+      "questName": "Trash Into Treasure",
+      "trader": "Shani",
+      "quantity": 6,
+      "isMain": false
+    }
+  ],
+  "battery": [
+    {
+      "questId": "ss10y",
+      "questName": "After Rain Comes",
+      "trader": "Celeste",
+      "quantity": 2,
+      "isMain": false
+    },
+    {
+      "questId": "ss3",
+      "questName": "Trash Into Treasure",
+      "trader": "Shani",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "first_wave_tape": [
+    {
+      "questId": "ss10h",
+      "questName": "Broken Monument",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "first_wave_compass": [
+    {
+      "questId": "ss10h",
+      "questName": "Broken Monument",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "first_wave_rations": [
+    {
+      "questId": "ss10h",
+      "questName": "Broken Monument",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "celeste_journal": [
+    {
+      "questId": "ss10t",
+      "questName": "Celeste's Journals",
+      "trader": "Celeste",
+      "quantity": 2,
+      "isMain": false
+    }
+  ],
+  "arc_alloy": [
+    {
+      "questId": "ss2",
+      "questName": "Clearer Skies",
+      "trader": "Shani",
+      "quantity": 3,
+      "isMain": false
+    }
+  ],
+  "antiseptic": [
+    {
+      "questId": "ss10c",
+      "questName": "Doctor's Orders",
+      "trader": "Celeste",
+      "quantity": 2,
+      "isMain": false
+    }
+  ],
+  "syringe": [
+    {
+      "questId": "ss10c",
+      "questName": "Doctor's Orders",
+      "trader": "Celeste",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "durable_cloth": [
+    {
+      "questId": "ss10c",
+      "questName": "Doctor's Orders",
+      "trader": "Celeste",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "great_mullein": [
+    {
+      "questId": "ss10c",
+      "questName": "Doctor's Orders",
+      "trader": "Celeste",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "wire": [
+    {
+      "questId": "ss10m",
+      "questName": "Eyes on the Prize",
+      "trader": "Tian Wen",
+      "quantity": 3,
+      "isMain": false
+    }
+  ],
+  "leaper_pulse_unit": [
+    {
+      "questId": "ss10x5",
+      "questName": "Into the Fray",
+      "trader": "Shani",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "surveyor_vault": [
+    {
+      "questId": "ss10d",
+      "questName": "Mixed Signals",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "rocketeer_driver": [
+    {
+      "questId": "ss10v",
+      "questName": "Out of the Shadows",
+      "trader": "Shani",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "flow_controller": [
+    {
+      "questId": "12_snap_and_salvage",
+      "questName": "Snap and Salvage",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "magnetron": [
+    {
+      "questId": "12_snap_and_salvage",
+      "questName": "Snap and Salvage",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "major_aiva_mementos": [
+    {
+      "questId": "ss10u",
+      "questName": "The Major's Footlocker",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "snitch_scanner": [
+    {
+      "questId": "ss9",
+      "questName": "The Trifecta",
+      "trader": "Shani",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "wasp_driver": [
+    {
+      "questId": "ss9",
+      "questName": "The Trifecta",
+      "trader": "Shani",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "hornet_driver": [
+    {
+      "questId": "ss9",
+      "questName": "The Trifecta",
+      "trader": "Shani",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "power_rod": [
+    {
+      "questId": "ss10x15",
+      "questName": "Tribute to Toledo",
+      "trader": "Celeste",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "water_pump": [
+    {
+      "questId": "ss10q",
+      "questName": "Unexpected Initiative",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ],
+  "fertilizer": [
+    {
+      "questId": "ss10q",
+      "questName": "Unexpected Initiative",
+      "trader": "Tian Wen",
+      "quantity": 1,
+      "isMain": false
+    }
+  ]
+}

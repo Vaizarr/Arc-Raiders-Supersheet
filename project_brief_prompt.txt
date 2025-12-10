@@ -1,0 +1,291 @@
+You are ChatGPT acting as a senior front-end engineer + UX/interaction designer.
+
+We’re going to build a **single-page web app** for managing Arc Raiders loot, starting completely from scratch, using ONLY the files I provide in a zip called `arcraiders-suprsheet.zip`.
+
+Read ALL instructions before you propose anything.
+
+=====================
+HIGH-LEVEL GOAL
+=====================
+Build a static HTML/CSS/JavaScript web app that:
+
+1. Displays a grid of Arc Raiders item icons (loot) with:
+   - Item image
+   - Rarity
+   - Value
+  - A base category: Keep, Recycle, Sell
+
+2. Helps me decide which items to:
+   - MUST keep (because of quests, hideout/workstation upgrades, expedition projects)
+   - Can safely Recycle
+   - Can safely Sell
+
+3. Uses the data from the zip:
+   - No hardcoded item logic beyond what’s in the data.
+   - The app should be data-driven and maintainable.
+
+This is for personal / community use. Correctness, clarity, and maintainability matter more than clever tricks.
+
+=====================
+FILES & DATA SOURCES (FROM THE ZIP)
+=====================
+Assume the zip `arcraiders-suprsheet.zip` is extracted next to your HTML file.
+
+Key files:
+
+1. `item-data.js`
+   - Defines `const ICON_DATA = [...]` and attaches it as `window.ICON_DATA`.
+   - Each item has fields like:
+     - `key`, `name`, `image`, `hasImage`
+     - `baseCategory` (e.g. `"keep"`, `"recycle"`, `"sell"`, or null)
+     - `rarity`, `type`, `value`, `foundIn`, `weightKg`, `stackSize`, `craftBench`
+     - `recyclesInto`, `salvagesInto`, `recipe`
+     - `quest` (boolean)
+     - `workstations`: `{ [stationId: string]: number[] }` – tiers / levels where this item is used
+     - `hasExpedition`, `expeditionPhases`
+     - `reasonSummary`: a human-readable summary like “Keep • Quest item • Workstations: Medical Lab T2 • Expedition project (phase 2)”
+     - `reasons`: an array of structured reasons, e.g.:
+       - `{ type: 'quest', itemId, questId, questName }`
+       - `{ type: 'workshop', itemId, workshopStation, workshopLevel }`
+       - `{ type: 'project', itemId, projectId, projectName, projectPhase }`
+
+   → Treat `ICON_DATA` as the **primary source of truth** for:
+   - Basic item info
+   - Base category (keep/recycle/sell)
+   - Quest relevance
+   - Workstation relevance
+   - Expedition relevance and reasoning
+
+2. `hideout/*.json`
+   - Files like `equipment_bench.json`, `refiner.json`, `utility_bench.json`, etc.
+   - Each contains:
+     - `id`
+     - `name` (localized, at least `en`)
+     - `maxLevel`
+     - `levels[]` with `level` and `requirementItemIds[]` (`itemId`, `quantity`).
+   - Use this for:
+     - Displaying workstation names
+     - Knowing how many levels/tiers each station has
+     - Potentially cross-checking item usage per station
+
+3. `quests/*.json`
+   - Each quest file has:
+     - `id`, `name`, `trader`, `description`, `map` etc.
+     - Some have `requiredItemIds` / `rewardItemIds` (`itemId`, `quantity`).
+   - Optional enrichment:
+     - You MAY use this to show extra quest context in the details panel (e.g. “Used in quests: X, Y, Z”).
+   - But the main “this is a quest item” flag is already encoded in:
+     - `item.quest`
+     - `item.reasons` / `item.reasonSummary`
+
+4. `images/*.png`
+   - Item icons referenced by `image` in `ICON_DATA`.
+   - Plus supporting images like `currency_icon.png` in the root.
+
+=====================
+MY EXPECTATIONS & STYLE
+=====================
+- I prefer:
+  - Clear, logical structure
+  - Minimal but thoughtful UI
+  - Data-driven logic (no magic constants)
+  - Incremental changes, not big rewrites
+
+- I will ask you to iterate. You MUST:
+  - Avoid “helpful” refactors that change working logic or layout unless I explicitly ask.
+  - Treat my current files as the **baseline** and give small patches.
+
+VERY IMPORTANT:
+- If something is ambiguous or underspecified, ask up to **3 focused questions BEFORE** you start coding.
+- Do NOT silently redesign or remove information that comes from the data (`reasonSummary`, `reasons`, workstation usage, quests, etc.).
+
+=====================
+ARCHITECTURAL OVERVIEW / PIPELINE
+=====================
+Adopt this pipeline and explain it back to me in your own words before implementing:
+
+1. **Data Ingestion Layer**
+   - Load `item-data.js`, using `window.ICON_DATA` as your raw dataset.
+   - Load all `hideout/*.json` into a `stationsById` map.
+   - Optionally load `quests/*.json` into a `questsById` map (for enrichment, not logic).
+
+2. **Normalization / Model Layer**
+   - Normalize `ICON_DATA` into a clean `Item` model, e.g.:
+
+     ```js
+     {
+       key: string,
+       name: string,
+       image: string,
+       rarity: 'Common'|'Uncommon'|'Rare'|'Epic'|'Legendary'|null,
+       value: number|null,
+       stackSize: number|null,
+       baseCategory: 'keep'|'recycle'|'sell'|null,
+       quest: boolean,
+       workstations: { [stationId: string]: number[] }, // tiers that use this item
+       hasExpedition: boolean,
+       expeditionPhases: number[],
+       reasonSummary: string|null,
+       reasons: any[], // preserve as-is from data
+       // Optional derived fields:
+       questReasonCount: number,
+       workshopReasonCount: number,
+       projectReasonCount: number
+     }
+     ```
+
+   - You may add derived fields if they help sorting/filtering, but keep raw fields intact.
+
+3. **State Layer**
+   - A central `state` object that holds:
+     - `searchQuery: string`
+     - `selectedCategories: { keep: boolean, recycle: boolean, sell: boolean }`
+     - `hideOthers: boolean`
+     - `saveQuestItems: boolean` (if true, quest items are treated as “must keep”)
+     - `compactGrid: boolean`
+     - `sortMode: 'valueLow'|'valueHigh'|'name'|'rarity'|'recommended'`
+     - `activeStationLevels: { [stationId: string]: number|null }` // user-selected target tier per station
+     - `hoveredItemKey` / `selectedItemKey` for details panel
+
+4. **Logic / Derivation Layer**
+   - Pure functions like:
+     - `filterBySearch(items, state)`
+     - `computeItemFlags(item, state)` returning:
+       - `isQuestTracked`
+       - `isWorkstationRelevant` (based on `activeStationLevels` and `item.workstations`)
+       - `effectiveKeep` / `effectiveRecycle` / `effectiveSell`
+     - `applyCategoryFilterAndHighlight(items, state)`:
+       - Whether to include an item at all (for Hide Others)
+       - Whether it should be highlighted vs dimmed
+     - `sortItems(items, state)`:
+       - Value, name, rarity, or “recommended” (Keep > Recycle > Sell by importance, using quest/workshop/expedition signals and baseCategory).
+
+5. **Rendering Layer**
+   - Functions to:
+     - Render the grid of items based on a prepared list of `{ item, flags }`.
+     - Render the workstation panel (one row per hideout station, with tier buttons).
+     - Render the details panel for `hoveredItemKey` / `selectedItemKey`.
+
+6. **Event Layer**
+   - Event handlers for:
+     - Category pill clicks
+     - Checkboxes/toggles
+     - Sort dropdown
+     - Search input
+     - Workstation tier buttons
+     - Item hover / click
+   - Each handler updates `state` and calls a single `render()` that:
+     - Applies filters & sorting
+     - Renders the grid and side panels.
+
+=====================
+REQUIRED UI / UX BEHAVIOR
+=====================
+
+Overall layout (desktop focus):
+- Top: Title + summary (“X items shown, Y Keep, Z Recycle, W Sell”).
+- Under that: controls:
+  - Category pills: Keep, Recycle, Sell.
+  - Checkboxes:
+    - “Hide others”
+    - “Save quest items”
+    - “Compact grid”
+  - Sorting dropdown.
+  - Search field.
+
+Main area:
+- Left: item grid.
+- Right: two stacked panels:
+  - Workstation panel
+  - Item details panel
+
+You may choose a clean, modern dark theme, but keep it visually restrained.
+
+Item tiles:
+- Show:
+  - Item image.
+  - Rarity via subtle background or glow color.
+  - A small badge in bottom-left showing base category:
+    - “K” for Keep
+    - “R” for Recycle
+    - “S” for Sell
+- When item is a quest item (and `saveQuestItems` is true):
+  - Show a quest icon (top-right).
+- When item is relevant for at least one active workstation tier:
+  - Show a workstation/tool icon (top-left).
+- Highlight behavior:
+  - If one or more categories are selected and `hideOthers` is ON:
+    - Show only items in those categories, sorted as chosen.
+  - If one or more categories are selected and `hideOthers` is OFF:
+    - Show all items, but:
+      - Items in the selected categories get a subtle underline/glow.
+      - Non-matching items are slightly dimmed.
+  - If no categories selected:
+    - Show all items without special category highlighting.
+
+Workstation panel:
+- For each station in `hideout/*.json`:
+  - Show station name (`name.en` when available).
+  - Show tier buttons T1..Tmax (based on `maxLevel` or `levels[].level`).
+- Clicking a tier:
+  - Sets `activeStationLevels[stationId]` to that tier, or clears it if clicked again.
+- Items are workstation-relevant if:
+  - `item.workstations[stationId]` contains a level >= the selected level for that station.
+
+Item details panel:
+- When hovering / selecting an item:
+  - Show:
+    - Name (color-coded by rarity).
+    - Subline:
+      - Rarity
+      - Value
+      - Stack size (if available)
+    - A section summarizing:
+      - `reasonSummary` (primary)
+      - Key details extracted from `reasons`:
+        - Quests that use this item (use `questName` if available).
+        - Workstations and levels (`workshopStation`, `workshopLevel`).
+        - Expedition phases or projects (`projectName`, `projectPhase`).
+    - You may add more sections like “Recycles into”, “Salvages into”, “Recipe” if it improves usefulness, but keep the layout simple and readable.
+
+Do NOT remove `reasonSummary` or `reasons` content from the UI unless I explicitly ask; this is the core of the tool.
+
+=====================
+CONSTRAINTS & BEHAVIOR TO AVOID
+=====================
+1. Do NOT:
+   - Fetch live data from the internet.
+   - Invent items, quests, or stations not present in the data.
+   - Change the meaning of keep/recycle/sell or quest/workstation flags.
+   - Silently redesign the whole layout after it’s working.
+
+2. Iteration constraints:
+   - When I ask you to fix or change something later, treat my current `index.html` and `app.js` as the **canonical baseline**.
+   - Prefer patch-style answers:
+     - Show only the functions or CSS blocks that changed.
+     - Mark them with `// CHANGED` or `// NEW`.
+   - Avoid full-file rewrites unless I explicitly say “full rewrite allowed”.
+
+3. Questions:
+   - Before writing any code, ask up to 3 targeted questions if any of the following are unclear:
+     - How to handle missing images.
+     - How to handle items with `baseCategory = null`.
+     - How to present expedition-related info in the UI.
+   - If everything is clear, you may skip questions and proceed directly.
+
+=====================
+FIRST STEPS FOR YOU
+=====================
+1. Confirm you understand the data files (`item-data.js`, `hideout/*.json`, `quests/*.json`) and how they map into the architecture.
+2. Propose:
+   - The exact `Item` model you’ll use after normalization.
+   - The shape of the central `state` object.
+   - A short bullet list of the main functions/modules you’ll implement in `app.js`.
+3. After I confirm, create:
+   - `index.html` skeleton with layout regions and minimal styling.
+   - `app.js` skeleton with:
+     - Data ingestion from `item-data.js` and `hideout/*.json`.
+     - The `state` object.
+     - Empty `render()` and stub helper functions.
+
+We will then iterate in small steps. Stick to the architecture and constraints above.

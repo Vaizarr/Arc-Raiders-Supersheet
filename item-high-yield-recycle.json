@@ -1,0 +1,67 @@
+{
+  "Fabric": [
+    { "itemName": "Rope", "yield": 5 },
+    { "itemName": "ARC Thermo Lining", "yield": 16 },
+    { "itemName": "Ruined Parachute", "yield": 10 },
+    { "itemName": "Torn Blanket", "yield": 12 },
+    { "itemName": "Dog Collar", "yield": 8 },
+    { "itemName": "Duct Tape", "yield": 8 },
+    { "itemName": "Tattered Clothes", "yield": 11 },
+    { "itemName": "Tattered ARC Lining", "yield": 12 }
+  ],
+
+  "Fabric (simple output)": [
+    { "itemName": "Fabric", "yield": 50 }
+  ],
+
+  "Magnet": [
+    { "itemName": "Exodus Modules", "yield": 2 },
+    { "itemName": "Microscope", "yield": 2 },
+    { "itemName": "Ripped Safety Vest", "yield": 2 },
+    { "itemName": "Industrial Magnet", "yield": 2 },
+    { "itemName": "Snap Blast Grenade", "yield": 2 }
+  ],
+
+  "Electrical Components": [
+    { "itemName": "Rotary Encoder", "yield": 2 },
+    { "itemName": "Fried Motherboard", "yield": 2 },
+    { "itemName": "Wasp Driver", "yield": 2 },
+    { "itemName": "Signal Amplifier", "yield": 2 },
+    { "itemName": "Hornet Driver", "yield": 2 }
+  ],
+
+  "Mechanical Components": [
+    { "itemName": "Surveyor Vault", "yield": 2 },
+    { "itemName": "Turbo Pump", "yield": 2 },
+    { "itemName": "Rusted Gear", "yield": 2 },
+    { "itemName": "Motor", "yield": 2 }
+  ],
+
+  "Steel Spring": [
+    { "itemName": "Rusted Tools", "yield": 2 },
+    { "itemName": "Spring Cushion", "yield": 2 },
+    { "itemName": "Mechanical Components", "yield": 2 },
+    { "itemName": "Ruined Accordion", "yield": 3 }
+  ],
+
+  "Advanced Electrical Components": [
+    { "itemName": "Spectrometer", "yield": 2 },
+    { "itemName": "Frequency Modulation Box", "yield": 2 },
+    { "itemName": "Telemetry Transceiver", "yield": 2 },
+    { "itemName": "Rocketeer Driver", "yield": 2 }
+  ],
+
+  "Advanced Mechanical Components": [
+    { "itemName": "Flow Controller", "yield": 2 },
+    { "itemName": "Microscope", "yield": 2 },
+    { "itemName": "Mini Centrifuge", "yield": 2 },
+    { "itemName": "Laser Pulse Unit", "yield": 2 },
+    { "itemName": "Cooling Fan", "yield": 2 },
+    { "itemName": "Geiger Counter", "yield": 3 },
+    { "itemName": "Portable TV", "yield": 2 },
+    { "itemName": "Cracked Bioscanner", "yield": 2 },
+    { "itemName": "Broken Taser", "yield": 2 },
+    { "itemName": "Power Bank", "yield": 2 },
+    { "itemName": "Broken Flashlight", "yield": 2 }
+  ]
+}
