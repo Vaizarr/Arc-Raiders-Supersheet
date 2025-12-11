@@ -308,7 +308,7 @@ function migrateState(oldState) {
 }
 
 /**
- * Deep merge two objects (target wins on conflicts)
+ * Deep merge two objects (source wins on conflicts)
  * @private
  * @param {Object} target - Target object
  * @param {Object} source - Source object
@@ -316,11 +316,12 @@ function migrateState(oldState) {
  */
 function deepMerge(target, source) {
   const output = { ...target };
-  
+
   for (const key in source) {
     if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
       output[key] = deepMerge(target[key] || {}, source[key]);
     } else {
+      // Persisted values override defaults during merge (source wins).
       output[key] = source[key];
     }
   }
