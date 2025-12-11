@@ -280,7 +280,7 @@ function renderItemGrid(itemsWithFlags) {
     }
 
     // High-yield badge
-    if (prefs.selectedCategories.sell && item.isHighYieldDonor) {
+    if (prefs.selectedCategories.recycle && item.isHighYieldDonor) {
       const hy = document.createElement('div');
       hy.className = 'high-yield-badge';
       hy.textContent = '!';
