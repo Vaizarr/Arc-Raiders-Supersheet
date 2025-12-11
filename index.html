@@ -479,6 +479,7 @@
       align-items: center;
       justify-content: center;
       padding: 4px;
+      isolation: isolate;
     }
 
     .item-image.rarity-common {
@@ -488,12 +489,18 @@
         rgb(5 13 36) 100%
       );
     }
+    .item-image.rarity-common::before {
+      background: radial-gradient(circle at 20% 20%, rgb(153 159 165 / 0.2), transparent 60%);
+    }
     .item-image.rarity-uncommon {
       background: linear-gradient(
         to right,
         rgb(86 203 134 / 0.2) 0%,
         rgb(5 13 36) 100%
       );
+    }
+    .item-image.rarity-uncommon::before {
+      background: radial-gradient(circle at 20% 20%, rgb(86 203 134 / 0.35), transparent 60%);
     }
     .item-image.rarity-rare {
       background: linear-gradient(
@@ -502,6 +509,9 @@
         rgb(5 13 36) 100%
       );
     }
+    .item-image.rarity-rare::before {
+      background: radial-gradient(circle at 20% 20%, rgb(30 150 252 / 0.35), transparent 60%);
+    }
     .item-image.rarity-epic {
       background: linear-gradient(
         to right,
@@ -509,12 +519,28 @@
         rgb(5 13 36) 100%
       );
     }
+    .item-image.rarity-epic::before {
+      background: radial-gradient(circle at 20% 20%, rgb(216 41 155 / 0.35), transparent 60%);
+    }
     .item-image.rarity-legendary {
       background: linear-gradient(
         to right,
         rgb(251 199 0 / 0.2) 0%,
         rgb(5 13 36) 100%
       );
+    }
+    .item-image.rarity-legendary::before {
+      background: radial-gradient(circle at 20% 20%, rgb(251 199 0 / 0.35), transparent 60%);
+    }
+
+    .item-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.9;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 1;
     }
 
     .item-image__curve {
@@ -527,6 +553,7 @@
       border-left: 12px solid transparent;
       border-radius: 20px;
       pointer-events: none;
+      z-index: 2;
     }
 
     .item-image__curve.curve-Common {
@@ -560,10 +587,26 @@
     }
 
     .item-image img {
-      width: 82%;
-      height: 82%;
+      position: relative;
+      width: 70%;
+      height: 70%;
       object-fit: contain;
       display: block;
+      z-index: 0;
+    }
+
+    .item-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      padding: 0 6px 6px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      opacity: 0.9;
     }
 
     #item-tooltip {

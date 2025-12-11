@@ -242,6 +242,11 @@ function renderItemGrid(itemsWithFlags) {
 
     tile.appendChild(wrap);
 
+    const name = document.createElement('div');
+    name.className = 'item-name';
+    name.textContent = item.name;
+    tile.appendChild(name);
+
     // Icons
     if (flags.showQuestIcon) {
       const q = document.createElement('div');
