@@ -470,7 +470,7 @@
     .item-image {
       position: relative;
       border-radius: 10px;
-      background: linear-gradient(135deg, #1c1f3a 0%, #0c0f1e 60%, #06070d 100%);
+      background: linear-gradient(145deg, rgba(26, 28, 38, 0.95) 0%, rgba(15, 16, 22, 0.98) 100%);
       border: 1px solid rgba(255, 255, 255, 0.06);
       flex: 1;
       width: 100%;
@@ -482,19 +482,81 @@
     }
 
     .item-image.rarity-common {
-      background: linear-gradient(135deg, #252844 0%, rgba(37, 40, 68, 0.4) 40%, #06070d 100%);
+      background: linear-gradient(
+        to right,
+        rgb(153 159 165 / 0.1) 0%,
+        rgb(5 13 36) 100%
+      );
     }
     .item-image.rarity-uncommon {
-      background: linear-gradient(135deg, #2f8f52 0%, rgba(47, 143, 82, 0.22) 42%, #06070d 100%);
+      background: linear-gradient(
+        to right,
+        rgb(86 203 134 / 0.2) 0%,
+        rgb(5 13 36) 100%
+      );
     }
     .item-image.rarity-rare {
-      background: linear-gradient(135deg, #1986e0 0%, rgba(25, 134, 224, 0.22) 42%, #06070d 100%);
+      background: linear-gradient(
+        to right,
+        rgb(30 150 252 / 0.2) 0%,
+        rgb(5 13 36) 100%
+      );
     }
     .item-image.rarity-epic {
-      background: linear-gradient(135deg, #ff3bbc 0%, rgba(255, 59, 188, 0.26) 42%, #06070d 100%);
+      background: linear-gradient(
+        to right,
+        rgb(216 41 155 / 0.2) 0%,
+        rgb(5 13 36) 100%
+      );
     }
     .item-image.rarity-legendary {
-      background: linear-gradient(135deg, #f1c500 0%, rgba(241, 197, 0, 0.26) 44%, #06070d 100%);
+      background: linear-gradient(
+        to right,
+        rgb(251 199 0 / 0.2) 0%,
+        rgb(5 13 36) 100%
+      );
+    }
+
+    .item-image__curve {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      bottom: -21px;
+      left: -21px;
+      border-bottom: 12px solid transparent;
+      border-left: 12px solid transparent;
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    .item-image__curve.curve-Common {
+      border-color: transparent;
+      border-bottom-color: rgb(153, 159, 165);
+      border-left-color: rgb(153, 159, 165);
+    }
+
+    .item-image__curve.curve-Uncommon {
+      border-color: transparent;
+      border-bottom-color: rgb(86, 203, 134);
+      border-left-color: rgb(86, 203, 134);
+    }
+
+    .item-image__curve.curve-Rare {
+      border-color: transparent;
+      border-bottom-color: rgb(30, 150, 252);
+      border-left-color: rgb(30, 150, 252);
+    }
+
+    .item-image__curve.curve-Epic {
+      border-color: transparent;
+      border-bottom-color: rgb(216, 41, 155);
+      border-left-color: rgb(216, 41, 155);
+    }
+
+    .item-image__curve.curve-Legendary {
+      border-color: transparent;
+      border-bottom-color: rgb(251, 199, 0);
+      border-left-color: rgb(251, 199, 0);
     }
 
     .item-image img {

@@ -218,7 +218,9 @@ function renderItemGrid(itemsWithFlags) {
 
     // Image
     const wrap = document.createElement('div');
-    const rarityClass = item.rarity ? 'rarity-' + item.rarity.toLowerCase() : '';
+    const rarity = item.rarity || '';
+    const rarityClass = rarity ? 'rarity-' + rarity.toLowerCase() : '';
+    const curveClass = rarity ? 'curve-' + rarity : '';
     wrap.className = `item-image ${rarityClass}`;
 
     if (item.hasImage && item.image) {
@@ -233,6 +235,10 @@ function renderItemGrid(itemsWithFlags) {
     } else {
       wrap.classList.add('item-image--placeholder');
     }
+
+    const curve = document.createElement('div');
+    curve.className = `item-image__curve ${curveClass}`;
+    wrap.appendChild(curve);
 
     tile.appendChild(wrap);
 
