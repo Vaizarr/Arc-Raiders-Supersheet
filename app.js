@@ -292,7 +292,7 @@ function renderItemGrid(itemsWithFlags) {
       const keepLabel = document.createElement('div');
       keepLabel.className = 'keep-label';
       keepLabel.textContent = 'Keep';
-      tile.appendChild(keepLabel);
+      wrap.appendChild(keepLabel);
     }
 
     // Inventory checkmark
