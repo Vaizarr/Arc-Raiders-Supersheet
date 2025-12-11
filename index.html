@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0a0b0f;
@@ -596,17 +596,19 @@
     }
 
     .item-name {
-      font-size: 0.78rem;
+      font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--text);
       text-align: center;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.08em;
       line-height: 1.2;
       padding: 0 6px 6px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      opacity: 0.9;
+      opacity: 0.95;
+      text-transform: uppercase;
     }
 
     #item-tooltip {
@@ -772,11 +774,13 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 0.6875rem;
-      font-weight: 500;
+      font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
       color: var(--text);
       margin-top: 2px;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .sidebar {
