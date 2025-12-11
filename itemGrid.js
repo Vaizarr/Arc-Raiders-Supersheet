@@ -7,11 +7,11 @@ import { questManager } from './questManager.js';
 import { workstationManager } from './workstationManager.js';
 
 const RARITY_COLORS = {
-  common: '#cfd6e6',
+  common: '#6c6c6c',
   uncommon: '#26bf57',
-  rare: '#01a8f1',
-  epic: '#ff3bbc',
-  legendary: '#ffe600',
+  rare: '#00a8f2',
+  epic: '#cc3099',
+  legendary: '#ffc600',
 };
 
 /**
