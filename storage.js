@@ -40,7 +40,7 @@ const DEFAULT_STATE = {
     showAll: false,
     saveQuestItems: true,
     enableProfitTips: false,
-    compactGrid: false,
+    compactGrid: true,
     inventoryMode: false,
     sortMode: 'recommended',
     lastSearch: '',
