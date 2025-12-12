@@ -1,49 +1,59 @@
 # Arc Raiders Supersheet
 
-A lightweight, client-side item management web app for Arc Raiders.
+A lightweight, client-side **item management** web app for Arc Raiders.
 
-Core value: help players decide what to do with items — **KEEP**, **SELL**, or **RECYCLE** — so they have required items ready when needed, and can safely liquidate items as soon as they’re no longer useful.
+The core purpose of the app is to help players decide what to do with items:
+**KEEP**, **RECYCLE**, or **SELL** — so they always have required items ready for progression, and can safely liquidate items as soon as they’re no longer needed.
+
+Progression (quests, workstation upgrades, expedition planning) is the primary signal that drives these decisions.
 
 ---
 
-## What the app does
+## What the app focuses on
 
-- Classifies items into **KEEP / SELL / RECYCLE**
-- Uses progression signals (quests, workstation upgrades, targets) to decide what must be kept
-- Automatically reduces “keep” scope as progression is completed (finished requirements no longer reserve items)
-- Guides recycling decisions using user priorities and item value trade-offs (sell value vs recycle value/parts)
+- Classifying items into KEEP / RECYCLE / SELL
+- Highlighting which items matter *now* and *why*
+- Automatically reducing “keep” scope as progression is completed
+- Guiding recycle vs sell decisions using progression relevance, user preferences, and economics
 
-The goal is fast, confident decisions with minimal manual tracking.
+The app’s value is not raw data display, but **clear, confident item decisions**.
 
 ---
 
 ## UX goals
 
-- Clear, quick, low-friction interface
-- Every recommendation should be explainable (show *why* an item is kept / recycled / sold)
-- Prioritize what matters now, surface what blocks progress, avoid clutter
+- Fast scanning and low cognitive load
+- Strong visual cues for priority and relevance
+- Clear explainability (“why is this item kept / recycled / sold?”)
+- Minimal friction: few clicks, obvious actions
 
 ---
 
-## Data-driven progression model
+## Data-driven model
 
-- Item definitions come from `item-data.js`
-- Quest/progression relationships come primarily from `quest-graph.json`
-- Additional progression sources may be added later (workstations, expedition stash, shortages)
+- Item definitions: `item-data.js` (`ICON_DATA`)
+- Primary quest & dependency model: `quest-graph.json`
+- Reverse lookup helpers: `item-quest-index.json`
+- Economic hints: sell profit and recycle yield data
+- App state: LocalStorage (via `storage.js`)
+
+All logic should be derived from data and state — not hardcoded per item.
 
 ---
 
-## Tech
+## Tech stack
 
-- Vanilla HTML/CSS/JS (ES modules)
+- Vanilla HTML, CSS, JavaScript (ES modules)
 - Static data files
-- LocalStorage persistence
+- No backend, no framework, no build step
 - Runs as a static site (local server or GitHub Pages)
 
 ---
 
-## Notes for contributors / AI tools
+## Conceptual reference
 
-- Decisions must be derived from data + user preferences, not hardcoded per item.
-- Keep it light and fast; avoid frameworks/build steps unless explicitly requested.
-- When adding features, optimize for: decision quality, explainability, and UI clarity.
+For the intended hierarchy, decision flow, and UX intent, see:
+
+- `docs/DECISION_MODEL.md`
+
+This document describes *what* the system should optimize for, without prescribing *how* it must be implemented.

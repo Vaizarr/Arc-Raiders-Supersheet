@@ -1,45 +1,65 @@
 ## Contribution & Implementation Guidelines
 
-This app is an item decision engine with a UI: help the player classify items into **KEEP / SELL / RECYCLE** using progression signals, then continuously update recommendations as the player’s situation changes.
+This project is an **item decision engine with a UI**.
+Changes should improve the quality, clarity, and confidence of KEEP / RECYCLE / SELL recommendations.
+
+Before implementing logic or UI changes, understand the intent described in:
+- `docs/DECISION_MODEL.md`
+
+---
 
 ### Core principles
-- Data-driven decisions (no per-item hardcoding)
-- Explainability: the UI should be able to show “why” for recommendations
-- Lightweight + performant: keep logic and rendering efficient
-- UX-first: reduce cognitive load, prioritize relevance, avoid clutter
+
+- Decisions must be data-driven and explainable
+- Prefer clarity over clever abstractions
+- Keep the system lightweight and performant
+- Optimize for user decision-making, not raw feature count
 
 ---
 
-### Data & decision logic
-- Items: `item-data.js`
-- Primary quest/progression model: `quest-graph.json`
-- Recommendations should be derived from:
-  - current progression state (quests/workstations/targets)
-  - user preferences (priorities, rules)
-  - economic trade-offs where relevant (sell vs recycle)
+### Data & logic
 
-Design for growth: new signals may be introduced later (shortage list, expedition stash, additional progression sources).
+- Items come from `item-data.js` (`ICON_DATA`)
+- Quest and progression relationships come primarily from `quest-graph.json`
+- Avoid per-item hardcoding; always derive behavior from data + state
+- Progression-related reasons must be able to expire as the player advances
+
+If adding new signals (shortage list, expedition stash, additional progression sources), integrate them as inputs to the same decision logic rather than as one-off UI rules.
 
 ---
 
-### UI/UX guidance
-When changing UI behavior or adding features, prioritize:
-- fast scanning and quick decisions
-- strong visual cues for priority and reasoning
-- minimal interaction steps
-- consistent placement: features should appear where the user needs them in the decision flow
+### Decision-first mindset
 
-If information is important but noisy, prefer progressive disclosure (details on hover/click).
+When adding or changing logic:
+- Prefer producing structured outputs (action, priority, reasons)
+- Avoid embedding core decision logic directly into UI rendering
+- UI should consume decisions, not re-derive them
+
+---
+
+### UI / UX guidance
+
+- Prioritize fast scanning and obvious priorities
+- Use visual cues first; text/details should be progressive (hover/click)
+- Place information where it supports the player’s decision flow
+- Reduce clutter as data volume grows
+
+If unsure about placement, ask:
+“What decision is the player trying to make here?”
 
 ---
 
 ### Code structure
-- ES modules with clear single responsibility
-- Keep state changes centralized and predictable
-- Avoid large refactors unless required; prefer small, testable steps
-- Prefer CSS classes over inline styles; visual styling should be driven by data (e.g., rarity)
+
+- Use ES modules with clear, single responsibility
+- Keep state mutations centralized and predictable
+- Avoid unnecessary refactors; prefer small, reversible changes
+- Styling should be class-based and data-driven (e.g. rarity)
 
 ---
 
-### If uncertain
-Propose a small, reversible change or ask for clarification rather than guessing intent.
+### When uncertain
+
+If intent or impact is unclear:
+- Propose a small, reversible change, or
+- Ask for clarification rather than guessing
