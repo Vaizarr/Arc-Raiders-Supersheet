@@ -187,6 +187,17 @@ function renderControls() {
   }
 }
 
+function getKeepStarCount(item) {
+  const reasonCount =
+    (item.questReasonCount || 0) +
+    (item.workshopReasonCount || 0) +
+    (item.projectReasonCount || 0);
+
+  if (reasonCount === 0) return 1;
+  if (reasonCount <= 2) return 2;
+  return 3;
+}
+
 /**
  * Render item grid
  */
@@ -211,6 +222,7 @@ function renderItemGrid(itemsWithFlags) {
     const tile = document.createElement('div');
     tile.className = 'item-tile';
     tile.dataset.itemKey = item.key;
+    if (item.baseCategory === 'keep') tile.classList.add('item-tile--keep');
 
     if (flags.isHighlightedByCategory) tile.classList.add('item-tile--highlight');
     if (flags.isDimmedByCategory) tile.classList.add('item-tile--dim');
@@ -246,6 +258,19 @@ function renderItemGrid(itemsWithFlags) {
     name.className = 'item-name';
     name.textContent = item.name;
     tile.appendChild(name);
+
+    if (item.baseCategory === 'keep') {
+      const keepStar = document.createElement('div');
+      const starCount = getKeepStarCount(item);
+      keepStar.className = 'keep-star';
+      keepStar.dataset.count = String(starCount);
+      keepStar.textContent = '★'.repeat(starCount);
+      keepStar.setAttribute(
+        'aria-label',
+        `Keep priority: ${starCount} star${starCount > 1 ? 's' : ''}`
+      );
+      tile.appendChild(keepStar);
+    }
 
     // Icons
     if (flags.showQuestIcon) {
@@ -285,14 +310,6 @@ function renderItemGrid(itemsWithFlags) {
       hy.className = 'high-yield-badge';
       hy.textContent = '!';
       tile.appendChild(hy);
-    }
-
-    // Keep label
-    if (item.baseCategory === 'keep') {
-      const keepLabel = document.createElement('div');
-      keepLabel.className = 'keep-label';
-      keepLabel.textContent = 'Keep';
-      wrap.appendChild(keepLabel);
     }
 
     // Inventory checkmark

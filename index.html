@@ -138,6 +138,22 @@
       transition: all 0.2s ease;
     }
 
+    .pill--keep {
+      position: relative;
+      padding-left: 22px;
+    }
+
+    .pill--keep::before {
+      content: '★';
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      color: #f6d675;
+      font-size: 0.85rem;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+      opacity: 0.9;
+    }
+
     .pill:hover {
       border-color: var(--border);
       background: rgba(20, 22, 30, 0.9);
@@ -433,7 +449,7 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       width: 132px;
       height: 132px;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -597,14 +613,14 @@
     }
 
     .item-name {
-      font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 0.82rem;
-      font-weight: 700;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
       color: var(--text);
       text-align: center;
-      letter-spacing: 0.08em;
-      line-height: 1.2;
-      padding: 0 6px 6px;
+      letter-spacing: 0.05em;
+      line-height: 1.15;
+      padding: 0 4px 4px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -686,23 +702,29 @@
       color: #f6d675;
     }
 
-    .keep-label {
+    .keep-star {
       position: absolute;
+      top: 6px;
       right: 6px;
-      bottom: 6px;
-      padding: 1px 5px;
-      border-radius: 6px;
-      background: rgba(54, 215, 210, 0.2);
-      border: none;
-      color: #4af4ec;
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
-      line-height: 1.1;
-      z-index: 2;
+      padding: 2px 4px;
+      border-radius: 8px;
+      background: rgba(246, 214, 117, 0.08);
+      border: 1px solid rgba(246, 214, 117, 0.4);
+      color: #f6d675;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      line-height: 1;
+      z-index: 3;
       pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .keep-star[data-count='3'] {
+      box-shadow: 0 0 12px rgba(246, 214, 117, 0.35);
     }
 
     .item-image--placeholder::after {
@@ -752,6 +774,10 @@
       overflow: hidden;
     }
 
+    .item-tile--keep .tile-icon {
+      top: 32px;
+    }
+
     .tile-icon--quest {
       right: 6px;
     }
@@ -770,12 +796,12 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-family: 'Rajdhani', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
       color: var(--text);
       margin-top: 2px;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
@@ -1508,7 +1534,7 @@
 
     <section class="app-controls">
       <div class="category-pills" id="category-pills">
-        <button class="pill" data-category="keep" data-selected="false">
+        <button class="pill pill--keep" data-category="keep" data-selected="false">
           <span class="pill-label">Keep</span>
         </button>
         <button class="pill" data-category="recycle" data-selected="false">
