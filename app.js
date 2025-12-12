@@ -155,11 +155,6 @@ function renderControls() {
   document.getElementById('show-all-checkbox').checked = prefs.showAll;
   document.getElementById('save-quest-checkbox').checked = prefs.saveQuestItems;
   document.getElementById('compact-grid-checkbox').checked = prefs.compactGrid;
-  
-  const inventoryCheckbox = document.getElementById('inventory-mode-checkbox');
-  if (inventoryCheckbox) {
-    inventoryCheckbox.checked = prefs.inventoryMode;
-  }
 
   const sort = document.getElementById('sort-select');
   sort.value = prefs.sortMode;
@@ -177,12 +172,14 @@ function renderControls() {
   const focusCurrencyIcon = document.getElementById('focus-currency-icon');
   if (focusCurrencyBtn) {
     const showButton = prefs.selectedCategories.recycle || prefs.selectedCategories.sell;
-    focusCurrencyBtn.style.display = showButton ? 'inline-flex' : 'none';
+    focusCurrencyBtn.style.visibility = showButton ? 'visible' : 'hidden';
+    focusCurrencyBtn.style.pointerEvents = showButton ? 'auto' : 'none';
+    focusCurrencyBtn.style.opacity = showButton ? '1' : '0';
+    focusCurrencyBtn.tabIndex = showButton ? 0 : -1;
+    focusCurrencyBtn.setAttribute('aria-hidden', showButton ? 'false' : 'true');
     focusCurrencyBtn.setAttribute('data-active', prefs.enableProfitTips ? 'true' : 'false');
     if (focusCurrencyIcon) {
-      focusCurrencyIcon.src = prefs.enableProfitTips 
-        ? 'ui_img/icons_small/currency_icon_on.png'
-        : 'ui_img/icons_small/currency_icon_off.png';
+      focusCurrencyIcon.src = 'ui_img/icons_small/currency_icon_on.png';
     }
   }
 }
@@ -296,28 +293,10 @@ function renderItemGrid(itemsWithFlags) {
       tile.appendChild(hy);
     }
 
-    // Inventory checkmark
-    if (prefs.inventoryMode && appState.itemTags.inventory[item.key]) {
-      const invLabel = document.createElement('div');
-      invLabel.className = 'inventory-checkmark';
-      invLabel.textContent = '✓';
-      tile.appendChild(invLabel);
-    }
-
     // Event listeners
     tile.addEventListener('click', () => {
-      if (prefs.inventoryMode) {
-        // Toggle inventory status
-        if (appState.itemTags.inventory[item.key]) {
-          delete appState.itemTags.inventory[item.key];
-        } else {
-          appState.itemTags.inventory[item.key] = true;
-        }
-        render();
-      } else {
-        selectedItemKey = item.key;
-        render();
-      }
+      selectedItemKey = item.key;
+      render();
     });
 
     tile.addEventListener('mouseenter', (evt) => showTooltip(item, evt));
@@ -353,12 +332,12 @@ function renderWorkstationPanel() {
     name.className = 'workstation-name';
     name.textContent = st.name?.en || st.id;
 
-    const meta = document.createElement('div');
-    meta.className = 'workstation-meta';
-
     const gameId = st.gameStationId;
     const max = workstationManager.getMaxTier(st.id);
     const current = workstationManager.getTier(appState, gameId);
+
+    const meta = document.createElement('div');
+    meta.className = 'workstation-meta';
 
     const tierChip = document.createElement('span');
     tierChip.className = 'workstation-tier-chip';
@@ -373,21 +352,31 @@ function renderWorkstationPanel() {
     header.appendChild(name);
     header.appendChild(meta);
 
-    const wrap = document.createElement('div');
-    wrap.className = 'tier-buttons';
+    const controlRow = document.createElement('div');
+    controlRow.className = 'workstation-control-row';
+
+    const label = document.createElement('span');
+    label.className = 'workstation-control-label';
+    label.textContent = 'Set tier';
+
+    const select = document.createElement('select');
+    select.className = 'workstation-tier-select';
+    select.dataset.stationId = gameId;
 
     for (let lvl = 0; lvl <= max; lvl++) {
-      const b = document.createElement('button');
-      b.className = 'tier-btn';
-      b.dataset.stationId = gameId;
-      b.dataset.level = lvl;
-      b.dataset.active = lvl === current ? 'true' : 'false';
-      b.textContent = `T${lvl}`;
-      wrap.appendChild(b);
+      const option = document.createElement('option');
+      option.value = lvl;
+      option.textContent = `T${lvl}`;
+      if (lvl === current) {
+        option.selected = true;
+      }
+      select.appendChild(option);
     }
 
     card.appendChild(header);
-    card.appendChild(wrap);
+    controlRow.appendChild(label);
+    controlRow.appendChild(select);
+    card.appendChild(controlRow);
     box.appendChild(card);
   }
 }
@@ -626,13 +615,12 @@ function renderQuestSearchPanel() {
       name.textContent = quest.name;
       result.appendChild(name);
       
-      const meta = document.createElement('div');
-      meta.className = 'quest-search-result-meta';
-      meta.textContent = `ID: ${quest.id}`;
       if (quest.type) {
-        meta.textContent += ` • ${quest.type}`;
+        const meta = document.createElement('div');
+        meta.className = 'quest-search-result-meta';
+        meta.textContent = quest.type;
+        result.appendChild(meta);
       }
-      result.appendChild(meta);
       
       resultsEl.appendChild(result);
     });
@@ -686,13 +674,12 @@ function createQuestCard(quest) {
   card.appendChild(header);
   
   // Meta info
-  const meta = document.createElement('div');
-  meta.className = 'selected-quest-meta';
-  meta.textContent = `Quest ID: ${quest.id}`;
   if (quest.type) {
-    meta.textContent += ` • ${quest.type}`;
+    const meta = document.createElement('div');
+    meta.className = 'selected-quest-meta';
+    meta.textContent = quest.type;
+    card.appendChild(meta);
   }
-  card.appendChild(meta);
   
   // Required items
   const items = quest.items || [];
@@ -889,15 +876,6 @@ function attachEventListeners() {
     });
   }
 
-  // Inventory mode checkbox
-  const inventoryCheckbox = document.getElementById('inventory-mode-checkbox');
-  if (inventoryCheckbox) {
-    inventoryCheckbox.addEventListener('change', (e) => {
-      appState.uiPreferences.inventoryMode = e.target.checked;
-      render();
-    });
-  }
-
   // Sort select
   document.getElementById('sort-select').addEventListener('change', (e) => {
     appState.uiPreferences.sortMode = e.target.value;
@@ -910,12 +888,12 @@ function attachEventListeners() {
     render();
   });
 
-  // Workstation tier buttons
-  document.getElementById('workstation-list').addEventListener('click', (e) => {
-    const btn = e.target.closest('.tier-btn');
-    if (!btn) return;
-    const st = btn.dataset.stationId;
-    const lvl = Number(btn.dataset.level);
+  // Workstation tier selector
+  document.getElementById('workstation-list').addEventListener('change', (e) => {
+    const select = e.target.closest('.workstation-tier-select');
+    if (!select) return;
+    const st = select.dataset.stationId;
+    const lvl = Number(select.value);
     workstationManager.setTier(appState, st, lvl);
     render();
   });

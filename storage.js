@@ -27,7 +27,6 @@ const DEFAULT_STATE = {
     keep: {},                     // { itemKey: true }
     sell: {},                     // { itemKey: true }
     recycle: {},                  // { itemKey: true }
-    inventory: {},                // { itemKey: true } - inventory mode tracking
   },
   
   // UI preferences
@@ -41,7 +40,6 @@ const DEFAULT_STATE = {
     saveQuestItems: true,
     enableProfitTips: false,
     compactGrid: true,
-    inventoryMode: false,
     sortMode: 'recommended',
     lastSearch: '',
   },
@@ -77,6 +75,8 @@ export function loadAppState() {
     
     // Merge with defaults to handle new fields
     const merged = deepMerge(structuredClone(DEFAULT_STATE), parsed);
+    if (merged.itemTags) delete merged.itemTags.inventory;
+    if (merged.uiPreferences) delete merged.uiPreferences.inventoryMode;
     console.log('[Storage] State loaded successfully');
     
     return merged;
@@ -270,10 +270,6 @@ function migrateState(oldState) {
       newState.questProgress.completedQuestIds = oldState.completedQuestIds;
     }
     
-    if (oldState.inventoryItems) {
-      newState.itemTags.inventory = oldState.inventoryItems;
-    }
-    
     if (oldState.selectedCategories) {
       newState.uiPreferences.selectedCategories = oldState.selectedCategories;
     }
@@ -292,10 +288,6 @@ function migrateState(oldState) {
     
     if (typeof oldState.compactGrid === 'boolean') {
       newState.uiPreferences.compactGrid = oldState.compactGrid;
-    }
-    
-    if (typeof oldState.inventoryMode === 'boolean') {
-      newState.uiPreferences.inventoryMode = oldState.inventoryMode;
     }
     
     if (oldState.sortMode) {
