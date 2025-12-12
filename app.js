@@ -815,7 +815,17 @@ function setTooltipContent(item) {
     const wsText = document.createElement('span');
     const stationIds = item.workstations ? Object.keys(item.workstations) : [];
     const stationNames = stationIds.length
-      ? stationIds.map((id) => workstationManager.getDisplayName(id)).join(', ')
+      ? stationIds
+          .map((id) => {
+            const levels = item.workstations?.[id];
+            const tierList = Array.isArray(levels) && levels.length > 0
+              ? `T${[...new Set(levels)].sort((a, b) => a - b).join(', T')}`
+              : '';
+
+            const name = workstationManager.getDisplayName(id);
+            return tierList ? `${name} ${tierList}` : name;
+          })
+          .join(', ')
       : 'Workstation use';
     wsText.textContent = stationNames;
     wsRow.appendChild(wsText);
