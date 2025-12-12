@@ -187,17 +187,6 @@ function renderControls() {
   }
 }
 
-function getKeepStarCount(item) {
-  const reasonCount =
-    (item.questReasonCount || 0) +
-    (item.workshopReasonCount || 0) +
-    (item.projectReasonCount || 0);
-
-  if (reasonCount === 0) return 1;
-  if (reasonCount <= 2) return 2;
-  return 3;
-}
-
 /**
  * Render item grid
  */
@@ -257,19 +246,14 @@ function renderItemGrid(itemsWithFlags) {
     const name = document.createElement('div');
     name.className = 'item-name';
     name.textContent = item.name;
-    tile.appendChild(name);
+    wrap.appendChild(name);
 
     if (item.baseCategory === 'keep') {
       const keepStar = document.createElement('div');
-      const starCount = getKeepStarCount(item);
       keepStar.className = 'keep-star';
-      keepStar.dataset.count = String(starCount);
-      keepStar.textContent = '★'.repeat(starCount);
-      keepStar.setAttribute(
-        'aria-label',
-        `Keep priority: ${starCount} star${starCount > 1 ? 's' : ''}`
-      );
-      tile.appendChild(keepStar);
+      keepStar.textContent = '★';
+      keepStar.setAttribute('aria-label', 'Keep priority');
+      wrap.appendChild(keepStar);
     }
 
     // Icons
@@ -300,7 +284,7 @@ function renderItemGrid(itemsWithFlags) {
     ) {
       const profit = document.createElement('div');
       profit.className = 'sell-profit-badge';
-      profit.textContent = `${item.sellProfitPercent}%`;
+      profit.textContent = `+${item.sellProfitPercent}%`;
       tile.appendChild(profit);
     }
 
