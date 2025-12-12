@@ -196,22 +196,19 @@ class QuestManager {
 
   /**
    * Check if all required items for a quest are collected
-   * TODO: This would check against actual inventory when inventory tracking is implemented
+   * Placeholder until a new inventory tracker is reintroduced
    * @param {Object} appState - Application state
    * @param {string} questId - Quest identifier
    * @returns {boolean} True if all items are collected
    */
   areAllItemsCollected(appState, questId) {
     const quest = this.getQuest(questId);
-    if (!quest || !quest.requiresItems || quest.items.length === 0) {
+   if (!quest || !quest.requiresItems || quest.items.length === 0) {
       return false;
     }
 
-    // TODO: Implement actual inventory checking when inventory tracking is fully built
-    // For now, check if items are marked in itemTags.inventory
-    return quest.items.every((itemKey) => {
-      return appState.itemTags.inventory[itemKey] === true;
-    });
+    // Inventory tracking UI is currently disabled; return false until a new collection tracker is added.
+    return false;
   }
 
   /**
