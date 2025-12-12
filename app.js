@@ -7,6 +7,17 @@
  * - questManager.js: Quest tracking
  * - workstationManager.js: Workstation tier management
  * - itemGrid.js: Item filtering and sorting
+ * 
+ * TODO: Craft Planning Feature
+ * Future enhancement: Allow users to select items they want to craft,
+ * then highlight all component items needed (including nested dependencies).
+ * This would help users see which items to keep for crafting specific gear.
+ * Implementation notes:
+ * - Add craft planning UI panel
+ * - Parse crafting recipes from item data
+ * - Compute recursive component dependencies
+ * - Highlight required items in grid with special badge
+ * - Track planning state in storage.js
  */
 
 import { loadAppState, saveAppState } from './storage.js';
@@ -107,6 +118,7 @@ function render() {
   renderControls();
   renderItemGrid(sortedItems);
   renderWorkstationPanel();
+  renderExpeditionPanel();
   renderItemDetailsPanel();
   renderQuestSearchPanel();
   
@@ -379,6 +391,34 @@ function renderWorkstationPanel() {
     card.appendChild(controlRow);
     box.appendChild(card);
   }
+}
+
+/**
+ * Render expedition panel
+ */
+function renderExpeditionPanel() {
+  const panel = document.getElementById('expedition-panel');
+  if (!panel) return;
+
+  const expeditionState = appState.expeditionProgress;
+  const isTracking = expeditionState.trackExpedition;
+
+  // Update panel tracking attribute
+  panel.setAttribute('data-tracking', isTracking ? 'true' : 'false');
+
+  // Update Track Expedition checkbox
+  const trackCheckbox = document.getElementById('track-expedition-checkbox');
+  if (trackCheckbox) {
+    trackCheckbox.checked = isTracking;
+  }
+
+  // Update phase buttons
+  const phaseButtons = panel.querySelectorAll('.expedition-phase-btn');
+  phaseButtons.forEach((btn) => {
+    const phase = parseInt(btn.dataset.phase);
+    const isCompleted = expeditionState.completedPhases[phase] || false;
+    btn.setAttribute('data-completed', isCompleted ? 'true' : 'false');
+  });
 }
 
 /**
@@ -867,6 +907,12 @@ function attachEventListeners() {
     render();
   });
 
+  // Track expedition checkbox
+  document.getElementById('track-expedition-checkbox').addEventListener('change', (e) => {
+    appState.expeditionProgress.trackExpedition = e.target.checked;
+    render();
+  });
+
   // Focus currency button
   const focusCurrencyBtn = document.getElementById('focus-currency-btn');
   if (focusCurrencyBtn) {
@@ -969,6 +1015,26 @@ function attachEventListeners() {
       } else if (action === 'remove') {
         questManager.deselectQuest(appState, questId);
       }
+      
+      render();
+    });
+  }
+
+  // Expedition phase buttons
+  const expeditionPanel = document.getElementById('expedition-panel');
+  if (expeditionPanel) {
+    expeditionPanel.addEventListener('click', (e) => {
+      const btn = e.target.closest('.expedition-phase-btn');
+      if (!btn) return;
+      
+      // Only allow interaction when tracking is enabled
+      if (!appState.expeditionProgress.trackExpedition) return;
+      
+      const phase = parseInt(btn.dataset.phase);
+      const currentState = appState.expeditionProgress.completedPhases[phase] || false;
+      
+      // Toggle phase completion
+      appState.expeditionProgress.completedPhases[phase] = !currentState;
       
       render();
     });

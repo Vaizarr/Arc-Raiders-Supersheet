@@ -5,6 +5,7 @@
 
 import { questManager } from './questManager.js';
 import { workstationManager } from './workstationManager.js';
+import { computeEffectiveCategory, getPriorityScore } from './modules/decisionEngine.js';
 
 const RARITY_COLORS = {
   common: '#6c6c6c',
@@ -245,29 +246,35 @@ class ItemGrid {
   computeItemFlags(appState, item) {
     const prefs = appState.uiPreferences;
     
+    // Use decision engine to compute effective category
+    const decision = computeEffectiveCategory(appState, item);
+    const effectiveCat = decision.effectiveCategory;
+    
+    // Legacy tracking for icons (still useful for UI indicators)
     const questTracked = this.isQuestTrackedForItem(appState, item);
     const wsRelevant = workstationManager.isItemRelevantForUpgrades(appState, item);
     
-    const questCompleted =
-      Array.isArray(item.questIdsUsed) &&
-      item.questIdsUsed.some((id) => appState.questProgress.completedQuestIds[id]);
+    // Check for expedition items
+    const expeditionState = appState.expeditionProgress || { trackExpedition: false };
+    const isExpeditionItem = 
+      expeditionState.trackExpedition &&
+      item.hasExpedition &&
+      item.expeditionPhases.some(phase => !expeditionState.completedPhases[phase]);
     
-    const rerouteToSell =
-      prefs.enableProfitTips &&
-      item.baseCategory === 'recycle' &&
-      item.isSellMoreProfitable;
-
+    // Profit boost indicator
     const profitBoost =
       prefs.enableProfitTips &&
       prefs.selectedCategories.sell &&
       typeof item.sellProfitPercent === 'number' &&
       item.sellProfitPercent > 0;
 
-    const cat = rerouteToSell ? 'sell' : item.baseCategory;
+    // Category matching logic
     const selected = prefs.selectedCategories;
     const selectedCount = Object.values(selected).filter(Boolean).length;
-
-    const matches = cat && selected[cat];
+    
+    // Handle "need" category - map to "keep" for UI purposes
+    const uiCategory = effectiveCat === 'need' ? 'keep' : effectiveCat;
+    const matches = uiCategory && selected[uiCategory];
 
     let isHighlighted = false;
     let isDimmed = false;
@@ -283,15 +290,6 @@ class ItemGrid {
       isHighlighted = matches;
     }
 
-    if (cat === 'keep') {
-      if (!prefs.saveQuestItems && questTracked) {
-        visible = false;
-      }
-      if (questCompleted) {
-        visible = false;
-      }
-    }
-
     if (profitBoost) {
       visible = true;
       isHighlighted = true;
@@ -299,10 +297,14 @@ class ItemGrid {
     }
 
     return {
+      effectiveCategory: effectiveCat,
+      decision,
       showQuestIcon: prefs.saveQuestItems && questTracked,
       showWorkshopIcon: wsRelevant,
+      showExpeditionIcon: isExpeditionItem,
       isQuestTracked: questTracked,
       isWorkstationRelevant: wsRelevant,
+      isExpeditionRelevant: isExpeditionItem,
       isHighlightedByCategory: isHighlighted,
       isDimmedByCategory: isDimmed,
       isVisibleAfterCategoryFilter: visible,
