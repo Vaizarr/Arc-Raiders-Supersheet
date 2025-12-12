@@ -22,6 +22,17 @@ const DEFAULT_STATE = {
   // Workstation configuration
   workstationTiers: {},           // { stationId: tierLevel }
   
+  // Expedition tracking
+  expeditionProgress: {
+    trackExpedition: false,       // Toggle state
+    completedPhases: {            // Phase completion status
+      1: false,
+      2: false,
+      3: false,
+      4: false,
+    },
+  },
+  
   // Item tagging system
   itemTags: {
     keep: {},                     // { itemKey: true }

@@ -8,30 +8,38 @@ Progression (quests, workstation tiers, expedition planning) is the primary sign
 
 ---
 
-## 1) Current behavior (today)
+## 1) Current behavior (implemented)
 
-### 1.1 Item categories
-Each item currently has a `baseCategory` (keep/recycle/sell) coming from item data (`ICON_DATA`).
-The UI uses this category to filter/highlight and to structure the player’s decisions.
+### 1.1 Decision Engine Module (`modules/decisionEngine.js`)
+The app now has a **dedicated decision engine** that computes effective categories dynamically.
 
-### 1.2 Signals and highlighting
-The app computes **display flags** per item (not a full decision engine yet), including:
-- `isQuestTracked`: item is required for a currently selected quest (or has quest reasons not completed)
-- `isWorkstationRelevant`: item is relevant for upgrades based on tracked workstation tiers
-- profit tip highlighting (when enabled + sell/recycle categories are active)
-- expedition relevance (via `hasExpedition`, used as a sort signal)
+Each item has a `baseCategory` (keep/recycle/sell) from `ICON_DATA`, but the decision engine can **override** this based on:
+- Quest completion state
+- Workstation tier progress
+- Expedition phase tracking
+- Economic profitability (sell vs recycle)
 
-### 1.3 Sorting intent (recommended)
-“Recommended” sorting currently prioritizes:
-1) profit opportunities (when enabled),
-2) quest relevance,
-3) workstation relevance,
-4) expedition relevance,
-5) category rank,
-6) item value,
-7) name.
+### 1.2 Decision Priority Hierarchy (implemented)
+The engine evaluates rules in this order (highest to lowest):
 
-This is already aligned with the goal: surface what matters most for decisions.
+1. **NEED** (priority 100) - Expedition items when tracking enabled and phase incomplete
+2. **KEEP** (priority 70-80) - Active quest reasons OR workstation upgrades needed
+3. **RECYCLE** (priority 60) - High-yield component donors (always stay in RECYCLE)
+4. **SELL** (priority 50) - Profitable items when "Focus currency" enabled
+5. **Default** - Falls back to baseCategory
+
+### 1.3 Reason Expiration (implemented)
+Reasons automatically expire when progression changes:
+- **Quest reasons** expire when quest is marked complete
+- **Workstation reasons** expire when user's tier ≥ required tier
+- **Expedition reasons** expire when phase is marked complete
+- **Track Quests toggle** - when disabled, quest reasons don't apply
+
+Items with expired KEEP reasons automatically demote to SELL or RECYCLE.
+
+### 1.4 Economic Routing (implemented)
+- High-yield donors **always** stay RECYCLE (never rerouted to SELL)
+- Other recycle items can be rerouted to SELL when "Focus currency" is enabled AND item is more profitable to sell
 
 ---
 

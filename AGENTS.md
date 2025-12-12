@@ -35,8 +35,12 @@ The app is successful when:
 ```
 index.html           # App shell
 app.js              # Bootstrap & module wiring
-modules/            # ES modules (single responsibility)
-  └─ storage.js     # State persistence (LocalStorage)
+modules/
+  └─ decisionEngine.js  # ⭐ Core decision logic (KEEP/RECYCLE/SELL/NEED)
+storage.js          # State persistence (LocalStorage)
+questManager.js     # Quest tracking and completion
+workstationManager.js  # Workstation tier management
+itemGrid.js         # Item filtering, sorting, and display
 item-data.js        # ICON_DATA (canonical item definitions)
 quest-graph.json    # ⭐ AUTHORITATIVE progression model
 item-quest-index.json  # Reverse lookup (items → quests)
