@@ -342,20 +342,38 @@ function renderWorkstationPanel() {
   }
 
   for (const st of stations) {
-    const row = document.createElement('div');
-    row.className = 'workstation-row';
+    const card = document.createElement('div');
+    card.className = 'workstation-card';
+
+    const header = document.createElement('div');
+    header.className = 'workstation-card__header';
 
     const name = document.createElement('div');
     name.className = 'workstation-name';
     name.textContent = st.name?.en || st.id;
-    row.appendChild(name);
 
-    const wrap = document.createElement('div');
-    wrap.className = 'tier-buttons';
+    const meta = document.createElement('div');
+    meta.className = 'workstation-meta';
 
     const gameId = st.gameStationId;
     const max = workstationManager.getMaxTier(st.id);
     const current = workstationManager.getTier(appState, gameId);
+
+    const tierChip = document.createElement('span');
+    tierChip.className = 'workstation-tier-chip';
+    tierChip.textContent = `T${current}`;
+
+    const tierMax = document.createElement('span');
+    tierMax.textContent = `of T${max}`;
+
+    meta.appendChild(tierChip);
+    meta.appendChild(tierMax);
+
+    header.appendChild(name);
+    header.appendChild(meta);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'tier-buttons';
 
     for (let lvl = 0; lvl <= max; lvl++) {
       const b = document.createElement('button');
@@ -367,8 +385,9 @@ function renderWorkstationPanel() {
       wrap.appendChild(b);
     }
 
-    row.appendChild(wrap);
-    box.appendChild(row);
+    card.appendChild(header);
+    card.appendChild(wrap);
+    box.appendChild(card);
   }
 }
 
