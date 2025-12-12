@@ -252,13 +252,18 @@ class ItemGrid {
       Array.isArray(item.questIdsUsed) &&
       item.questIdsUsed.some((id) => appState.questProgress.completedQuestIds[id]);
     
+    const rerouteToSell =
+      prefs.enableProfitTips &&
+      item.baseCategory === 'recycle' &&
+      item.isSellMoreProfitable;
+
     const profitBoost =
       prefs.enableProfitTips &&
       prefs.selectedCategories.sell &&
       typeof item.sellProfitPercent === 'number' &&
       item.sellProfitPercent > 0;
 
-    const cat = item.baseCategory;
+    const cat = rerouteToSell ? 'sell' : item.baseCategory;
     const selected = prefs.selectedCategories;
     const selectedCount = Object.values(selected).filter(Boolean).length;
 

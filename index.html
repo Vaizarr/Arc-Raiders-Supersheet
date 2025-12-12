@@ -288,10 +288,11 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: rgba(110, 113, 130, 0.2);
+      background-color: rgba(110, 113, 130, 0.18);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 34px;
       border: 1.5px solid var(--border-soft);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
     }
     .slider:before {
       position: absolute;
@@ -300,14 +301,15 @@
       width: 18px;
       left: 2px;
       bottom: 1.5px;
-      background-color: #fff;
+      background-color: #e9eefc;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
     }
     .switch input:checked + .slider {
-      background-color: var(--accent);
-      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.32), rgba(59, 130, 246, 0.18));
+      border-color: rgba(59, 130, 246, 0.65);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
     }
     .switch input:checked + .slider:before {
       transform: translateX(18px);
@@ -348,9 +350,9 @@
       gap: 8px;
       padding: 7px 14px;
       border-radius: 999px;
-      border: 1.5px solid var(--border-soft);
-      background: rgba(15, 16, 22, 0.7);
-      color: var(--text-secondary);
+      border: 1.5px solid rgba(67, 70, 88, 0.7);
+      background: rgba(20, 22, 30, 0.78);
+      color: #cfd4e7;
       cursor: pointer;
       font-size: 0.8125rem;
       font-weight: 500;
@@ -365,14 +367,14 @@
     }
 
     .focus-currency-btn[data-active="true"] {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-      color: var(--text);
+      border-color: rgba(59, 130, 246, 0.4);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.08));
+      color: #f3f6ff;
     }
 
     .focus-currency-btn[data-active="true"]:hover {
-      border-color: var(--accent-hover);
-      background: rgba(59, 130, 246, 0.18);
+      border-color: rgba(59, 130, 246, 0.55);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.1));
     }
 
     .focus-currency-btn img {
@@ -386,6 +388,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      margin-left: auto;
     }
 
     .switch-label {
@@ -449,7 +452,7 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 0;
       width: 132px;
       height: 132px;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -488,6 +491,9 @@
       border-radius: 10px;
       background: linear-gradient(145deg, rgba(26, 28, 38, 0.95) 0%, rgba(15, 16, 22, 0.98) 100%);
       border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+        0 6px 18px rgba(0, 0, 0, 0.55);
       flex: 1;
       width: 100%;
       overflow: hidden;
@@ -613,19 +619,28 @@
     }
 
     .item-name {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      padding: 3px 7px;
+      border-radius: 8px;
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text);
+      font-size: 0.64rem;
+      font-weight: 400;
+      color: #f1f4fa;
       text-align: center;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       line-height: 1.15;
-      padding: 0 4px 4px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      opacity: 0.95;
+      opacity: 0.92;
       text-transform: uppercase;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
+      backdrop-filter: blur(2px);
+      z-index: 3;
+      pointer-events: none;
     }
 
     #item-tooltip {
@@ -704,27 +719,22 @@
 
     .keep-star {
       position: absolute;
-      top: 6px;
       right: 6px;
-      padding: 2px 4px;
-      border-radius: 8px;
-      background: rgba(246, 214, 117, 0.08);
-      border: 1px solid rgba(246, 214, 117, 0.4);
+      bottom: 6px;
+      padding: 2px 5px;
+      border-radius: 7px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(246, 214, 117, 0.35);
       color: #f6d675;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
       line-height: 1;
       z-index: 3;
       pointer-events: none;
       display: inline-flex;
       align-items: center;
-      gap: 2px;
-    }
-
-    .keep-star[data-count='3'] {
-      box-shadow: 0 0 12px rgba(246, 214, 117, 0.35);
     }
 
     .item-image--placeholder::after {
@@ -738,14 +748,15 @@
       position: absolute;
       top: 6px;
       left: 6px;
-      padding: 0;
-      background: none;
-      border: none;
-      color: #52ff9e;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.025em;
-      text-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
+      padding: 2px 5px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(82, 255, 158, 0.28);
+      border-radius: 7px;
+      color: #d8ffe9;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
     }
 
     .high-yield-badge {
@@ -790,19 +801,6 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-    }
-
-    .item-name {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-top: 2px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
     }
 
     .sidebar {
@@ -1635,7 +1633,7 @@
           </button>
           <div class="compact-toggle compact-toggle--in-grid">
             <label class="switch">
-              <input id="compact-grid-checkbox" type="checkbox" />
+              <input id="compact-grid-checkbox" type="checkbox" checked />
               <span class="slider"></span>
             </label>
             <span class="switch-label">Compact grid</span>
