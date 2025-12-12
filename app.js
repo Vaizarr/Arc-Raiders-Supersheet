@@ -218,7 +218,9 @@ function renderItemGrid(itemsWithFlags) {
 
     // Image
     const wrap = document.createElement('div');
-    const rarityClass = item.rarity ? 'rarity-' + item.rarity.toLowerCase() : '';
+    const rarity = item.rarity || '';
+    const rarityClass = rarity ? 'rarity-' + rarity.toLowerCase() : '';
+    const curveClass = rarity ? 'curve-' + rarity : '';
     wrap.className = `item-image ${rarityClass}`;
 
     if (item.hasImage && item.image) {
@@ -234,7 +236,16 @@ function renderItemGrid(itemsWithFlags) {
       wrap.classList.add('item-image--placeholder');
     }
 
+    const curve = document.createElement('div');
+    curve.className = `item-image__curve ${curveClass}`;
+    wrap.appendChild(curve);
+
     tile.appendChild(wrap);
+
+    const name = document.createElement('div');
+    name.className = 'item-name';
+    name.textContent = item.name;
+    tile.appendChild(name);
 
     // Icons
     if (flags.showQuestIcon) {
@@ -269,7 +280,7 @@ function renderItemGrid(itemsWithFlags) {
     }
 
     // High-yield badge
-    if (prefs.selectedCategories.sell && item.isHighYieldDonor) {
+    if (prefs.selectedCategories.recycle && item.isHighYieldDonor) {
       const hy = document.createElement('div');
       hy.className = 'high-yield-badge';
       hy.textContent = '!';
@@ -281,7 +292,7 @@ function renderItemGrid(itemsWithFlags) {
       const keepLabel = document.createElement('div');
       keepLabel.className = 'keep-label';
       keepLabel.textContent = 'Keep';
-      tile.appendChild(keepLabel);
+      wrap.appendChild(keepLabel);
     }
 
     // Inventory checkmark
