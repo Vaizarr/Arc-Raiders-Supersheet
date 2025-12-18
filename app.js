@@ -163,10 +163,39 @@ function renderSummaryBar(itemsWithFlags) {
  */
 function renderControls() {
   const prefs = appState.uiPreferences;
+  const workstationTracking = appState.workstationTracking || { enabled: true };
+  const expeditionState = appState.expeditionProgress || { trackExpedition: false };
   
   document.getElementById('show-all-checkbox').checked = prefs.showAll;
   document.getElementById('save-quest-checkbox').checked = prefs.saveQuestItems;
   document.getElementById('compact-grid-checkbox').checked = prefs.compactGrid;
+  
+  // Update tracking checkboxes
+  const trackWorkstationCheckbox = document.getElementById('track-workstation-checkbox');
+  if (trackWorkstationCheckbox) {
+    trackWorkstationCheckbox.checked = workstationTracking.enabled;
+  }
+  
+  const trackExpeditionCheckbox = document.getElementById('track-expedition-checkbox');
+  if (trackExpeditionCheckbox) {
+    trackExpeditionCheckbox.checked = expeditionState.trackExpedition;
+  }
+  
+  // Update conditional panel visibility
+  const questsPanel = document.getElementById('quests-panel');
+  if (questsPanel) {
+    questsPanel.style.display = prefs.saveQuestItems ? 'flex' : 'none';
+  }
+  
+  const workstationsPanel = document.querySelector('.panel--workstations');
+  if (workstationsPanel) {
+    workstationsPanel.style.display = workstationTracking.enabled ? 'flex' : 'none';
+  }
+  
+  const expeditionPanel = document.getElementById('expedition-panel');
+  if (expeditionPanel) {
+    expeditionPanel.style.display = expeditionState.trackExpedition ? 'flex' : 'none';
+  }
 
   const sort = document.getElementById('sort-select');
   sort.value = prefs.sortMode;
@@ -250,14 +279,14 @@ function renderItemGrid(itemsWithFlags) {
     curve.className = `item-image__curve ${curveClass}`;
     wrap.appendChild(curve);
 
-    tile.appendChild(wrap);
-
     const name = document.createElement('div');
     name.className = 'item-name';
     name.textContent = item.name;
-    wrap.appendChild(name);
+    tile.appendChild(name);
 
-    if (item.baseCategory === 'keep') {
+    tile.appendChild(wrap);
+
+    if (prefs.showAll && item.baseCategory === 'keep') {
       const keepStar = document.createElement('div');
       keepStar.className = 'keep-star';
       keepStar.textContent = '★';
@@ -297,11 +326,13 @@ function renderItemGrid(itemsWithFlags) {
       tile.appendChild(profit);
     }
 
-    // High-yield badge
+    // High-yield badge and border
     if (prefs.selectedCategories.recycle && item.isHighYieldDonor) {
+      tile.classList.add('item-tile--high-yield');
       const hy = document.createElement('div');
       hy.className = 'high-yield-badge';
       hy.textContent = '!';
+      hy.title = 'HIGH-YIELD RECYCLE';
       tile.appendChild(hy);
     }
 
@@ -337,9 +368,7 @@ function renderWorkstationPanel() {
     const card = document.createElement('div');
     card.className = 'workstation-card';
 
-    const header = document.createElement('div');
-    header.className = 'workstation-card__header';
-
+    // Compact layout: Name + Tier dropdown in one row
     const name = document.createElement('div');
     name.className = 'workstation-name';
     name.textContent = st.name?.en || st.id;
@@ -347,29 +376,6 @@ function renderWorkstationPanel() {
     const gameId = st.gameStationId;
     const max = workstationManager.getMaxTier(st.id);
     const current = workstationManager.getTier(appState, gameId);
-
-    const meta = document.createElement('div');
-    meta.className = 'workstation-meta';
-
-    const tierChip = document.createElement('span');
-    tierChip.className = 'workstation-tier-chip';
-    tierChip.textContent = `T${current}`;
-
-    const tierMax = document.createElement('span');
-    tierMax.textContent = `of T${max}`;
-
-    meta.appendChild(tierChip);
-    meta.appendChild(tierMax);
-
-    header.appendChild(name);
-    header.appendChild(meta);
-
-    const controlRow = document.createElement('div');
-    controlRow.className = 'workstation-control-row';
-
-    const label = document.createElement('span');
-    label.className = 'workstation-control-label';
-    label.textContent = 'Set tier';
 
     const select = document.createElement('select');
     select.className = 'workstation-tier-select';
@@ -385,10 +391,8 @@ function renderWorkstationPanel() {
       select.appendChild(option);
     }
 
-    card.appendChild(header);
-    controlRow.appendChild(label);
-    controlRow.appendChild(select);
-    card.appendChild(controlRow);
+    card.appendChild(name);
+    card.appendChild(select);
     box.appendChild(card);
   }
 }
@@ -442,6 +446,14 @@ function renderItemDetailsPanel() {
   name.textContent = item.name;
   box.appendChild(name);
 
+  // Special item note (e.g., profit boost)
+  if (typeof item.sellProfitPercent === 'number' && item.sellProfitPercent > 0) {
+    const specialNote = document.createElement('div');
+    specialNote.className = 'details-special-note';
+    specialNote.textContent = `[+${item.sellProfitPercent}% profit when selling vs recycle]`;
+    box.appendChild(specialNote);
+  }
+
   // Subline with metadata
   const sub = document.createElement('div');
   sub.className = 'details-subline';
@@ -470,148 +482,108 @@ function renderItemDetailsPanel() {
   });
   box.appendChild(sub);
 
-  // Reason summary
-  const rsTitle = document.createElement('div');
-  rsTitle.className = 'details-section-title';
-  rsTitle.textContent = 'Reason summary';
-  box.appendChild(rsTitle);
+  // Needed for
+  const neededTitle = document.createElement('div');
+  neededTitle.className = 'details-section-title';
+  neededTitle.textContent = 'Needed for';
+  box.appendChild(neededTitle);
 
-  const rsBody = document.createElement('div');
-  rsBody.className = 'details-section-body';
-  rsBody.textContent = item.reasonSummary || 'No detailed reason available.';
-  box.appendChild(rsBody);
+  const neededBody = document.createElement('div');
+  neededBody.className = 'details-section-body';
+  const neededEntries = [];
 
-  // Profit callout
-  if (typeof item.sellProfitPercent === 'number' && item.sellProfitPercent !== 0) {
-    const profitWrap = document.createElement('div');
-    profitWrap.className = 'details-section-body profit-callout';
-    const icon = document.createElement('span');
-    icon.className = 'profit-callout__icon';
-    icon.textContent = '!';
-    profitWrap.appendChild(icon);
-    const text = document.createElement('span');
-    text.textContent = `${item.sellProfitPercent}% profit when selling vs recycle`;
-    profitWrap.appendChild(text);
-    box.appendChild(profitWrap);
-  }
-
-  // High-yield recycle
-  if (item.isHighYieldDonor && item.highYieldDonations.length) {
-    const t = document.createElement('div');
-    t.className = 'details-section-title';
-    t.textContent = 'High-yield recycle';
-    box.appendChild(t);
-    const body = document.createElement('div');
-    body.className = 'details-section-body';
-    item.highYieldDonations.forEach((d) => {
-      const row = document.createElement('div');
-      const qty = d.yield != null ? `${d.yield}× ` : '';
-      row.textContent = `${qty}${d.component}`;
-      body.appendChild(row);
-    });
-    box.appendChild(body);
-  }
-
-  // Best donors
-  const bestDonors = item.highYieldBestDonors || [];
-  if (bestDonors.length) {
-    const t = document.createElement('div');
-    t.className = 'details-section-title';
-    t.textContent = 'Best donors';
-    box.appendChild(t);
-    const body = document.createElement('div');
-    body.className = 'details-section-body';
-    bestDonors.forEach((d) => {
-      const row = document.createElement('div');
-      const qty = d.yield != null ? `${d.yield}× ` : '';
-      row.textContent = `${qty}${d.itemName}`;
-      body.appendChild(row);
-    });
-    box.appendChild(body);
-  }
-
-  // Quests
   const questReasons = item.reasons.filter((r) => r.type === 'quest');
-  if (questReasons.length) {
-    const t = document.createElement('div');
-    t.className = 'details-section-title';
-    t.textContent = 'Quests';
-    box.appendChild(t);
-    const body = document.createElement('div');
-    body.className = 'details-section-body';
-    questReasons.forEach((qr) => {
-      const id = qr.questId;
-      const done = questManager.isQuestCompleted(appState, id);
-      const tag = document.createElement('button');
-      tag.className = 'quest-tag';
-      tag.dataset.questId = id;
-      tag.dataset.completed = done ? 'true' : 'false';
-      tag.textContent = qr.questName || `Quest ${id}`;
-      body.appendChild(tag);
-    });
-    box.appendChild(body);
-  }
+  const questNames = new Set();
+  questReasons.forEach((qr) => {
+    const label = qr.questName || (qr.questId ? `Quest ${qr.questId}` : null);
+    if (label) questNames.add(JSON.stringify({ id: qr.questId, label }));
+  });
+  questNames.forEach((qStr) => {
+    const { id, label } = JSON.parse(qStr);
+    const done = id ? questManager.isQuestCompleted(appState, id) : false;
+    neededEntries.push({ type: 'quest', label, id, done });
+  });
 
-  // Workstations
   const wsReasons = item.reasons.filter((r) => r.type === 'workshop');
-  if (wsReasons.length) {
-    const t = document.createElement('div');
-    t.className = 'details-section-title';
-    t.textContent = 'Workstations';
-    box.appendChild(t);
-    const body = document.createElement('div');
-    body.className = 'details-section-body';
-    const map = new Map();
-    wsReasons.forEach((r) => {
-      const st = r.workshopStation;
-      const lvl = Number(r.workshopLevel || r.workshopLevelId);
-      if (!st || !lvl) return;
-      if (!map.has(st)) map.set(st, new Set());
-      map.get(st).add(lvl);
+  const wsMap = new Map();
+  wsReasons.forEach((r) => {
+    const st = r.workshopStation;
+    const lvl = Number(r.workshopLevel || r.workshopLevelId);
+    if (!st || !lvl) return;
+    if (!wsMap.has(st)) wsMap.set(st, new Set());
+    wsMap.get(st).add(lvl);
+  });
+  for (const [st, lvSet] of wsMap.entries()) {
+    const levels = Array.from(lvSet).sort((a, b) => a - b);
+    const stationName = workstationManager.getDisplayName(st);
+    neededEntries.push({
+      type: 'workstation',
+      label: `Workstation — ${stationName} (T${levels.join(', T')})`,
     });
-    for (const [st, lvSet] of map.entries()) {
-      const row = document.createElement('div');
-      row.className = 'ws-entry';
-      const n = document.createElement('span');
-      n.className = 'ws-entry-name';
-      n.textContent = workstationManager.getDisplayName(st);
-      row.appendChild(n);
-      const lv = Array.from(lvSet).sort((a, b) => a - b);
-      const lvEl = document.createElement('span');
-      lvEl.className = 'ws-entry-levels';
-      lvEl.textContent = 'T' + lv.join(', T');
-      row.appendChild(lvEl);
-      body.appendChild(row);
-    }
-    box.appendChild(body);
   }
 
-  // Expedition
-  const exp = item.reasons.filter((r) => r.type === 'project');
-  if (item.hasExpedition || exp.length) {
-    const t = document.createElement('div');
-    t.className = 'details-section-title';
-    t.textContent = 'Expedition';
-    box.appendChild(t);
-    const body = document.createElement('div');
-    body.className = 'details-section-body';
-    if (item.expeditionPhases.length) {
-      const l = document.createElement('div');
-      l.textContent = 'Project phases: ' + item.expeditionPhases.join(', ');
-      body.appendChild(l);
-    }
-    exp.forEach((r) => {
-      const l = document.createElement('div');
-      const name = r.projectName || 'Project';
-      const phase = r.projectPhase != null ? `Phase ${r.projectPhase}` : '';
-      l.textContent = phase ? `${name} — ${phase}` : name;
-      body.appendChild(l);
+  const expReasons = item.reasons.filter((r) => r.type === 'project');
+  if (item.expeditionPhases.length) {
+    neededEntries.push({
+      type: 'expedition',
+      label: `Expedition — Phase ${item.expeditionPhases.join(', Phase ')}`,
     });
-    if (!body.hasChildNodes()) {
-      body.textContent = 'Expedition-related item.';
-    }
-    box.appendChild(body);
+  } else if (expReasons.length) {
+    const expLabels = new Set();
+    expReasons.forEach((r) => {
+      const name = r.projectName || 'Expedition';
+      const phase = r.projectPhase != null ? ` (Phase ${r.projectPhase})` : '';
+      expLabels.add(`Expedition — ${name}${phase}`);
+    });
+    expLabels.forEach((label) => neededEntries.push({ type: 'expedition', label }));
   }
+
+  if (neededEntries.length) {
+    neededEntries.forEach((entry) => {
+      if (entry.type === 'quest') {
+        const tag = document.createElement('button');
+        tag.className = 'quest-tag';
+        if (entry.id) tag.dataset.questId = entry.id;
+        tag.dataset.completed = entry.done ? 'true' : 'false';
+        tag.textContent = `Quest — ${entry.label}`;
+        neededBody.appendChild(tag);
+        return;
+      }
+      const row = document.createElement('div');
+      row.textContent = entry.label;
+      neededBody.appendChild(row);
+    });
+  } else {
+    neededBody.textContent = 'No active dependencies.';
+  }
+  box.appendChild(neededBody);
+
+  // Recycling output
+  const recycleTitle = document.createElement('div');
+  recycleTitle.className = 'details-section-title';
+  recycleTitle.textContent = 'Recycling Output';
+  box.appendChild(recycleTitle);
+
+  const recycleBody = document.createElement('div');
+  recycleBody.className = 'details-section-body';
+  const recycleEntries = Object.entries(item.recyclesInto || {}).filter(
+    ([, qty]) => qty != null && qty !== 0
+  );
+
+  recycleEntries.forEach(([key, qty]) => {
+    const match = itemGrid.getItems().find((i) => i.key === key);
+    const label = match ? match.name : key.replace(/_/g, ' ');
+    const row = document.createElement('div');
+    const count = Number.isFinite(qty) ? `${qty}× ` : '';
+    row.textContent = `${count}${label}`;
+    recycleBody.appendChild(row);
+  });
+
+  if (!recycleEntries.length) {
+    recycleBody.textContent = 'No recycle output data available.';
+  }
+
+  box.appendChild(recycleBody);
 }
 
 /**
@@ -910,6 +882,12 @@ function attachEventListeners() {
   // Track expedition checkbox
   document.getElementById('track-expedition-checkbox').addEventListener('change', (e) => {
     appState.expeditionProgress.trackExpedition = e.target.checked;
+    render();
+  });
+
+  // Track workstation checkbox
+  document.getElementById('track-workstation-checkbox').addEventListener('change', (e) => {
+    appState.workstationTracking.enabled = e.target.checked;
     render();
   });
 

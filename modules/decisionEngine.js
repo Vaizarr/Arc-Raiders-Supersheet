@@ -117,8 +117,9 @@ export function computeEffectiveCategory(appState, item) {
   
   // ===== 3. CHECK WORKSTATION REASONS =====
   let hasActiveWorkstationReason = false;
+  const workstationTracking = appState.workstationTracking || { enabled: true };
   
-  if (item.workstations && Object.keys(item.workstations).length > 0) {
+  if (workstationTracking.enabled && item.workstations && Object.keys(item.workstations).length > 0) {
     const activeStations = [];
     const reachedStations = [];
     
@@ -163,6 +164,12 @@ export function computeEffectiveCategory(appState, item) {
         text: `Workstation tier${reachedStations.length > 1 ? 's' : ''} already reached`
       });
     }
+  } else if (!workstationTracking.enabled && item.workstations && Object.keys(item.workstations).length > 0) {
+    // Workstation tracking disabled
+    expiredReasons.push({
+      type: 'workstation',
+      text: 'Workstation tracking disabled'
+    });
   }
   
   // ===== 4. DETERMINE EFFECTIVE CATEGORY =====

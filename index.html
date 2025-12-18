@@ -70,20 +70,20 @@
       width: 100%;
       max-width: 1440px;
       margin: 0 auto;
-      padding: 24px 24px 32px;
-      gap: 16px;
+      padding: 12px 16px 20px;
+      gap: 10px;
     }
 
     .app-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 16px;
-      margin-bottom: 4px;
+      gap: 12px;
+      margin-bottom: 0;
     }
 
     .app-title {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: -0.02em;
       text-transform: uppercase;
@@ -94,10 +94,10 @@
     }
 
     .app-subtitle {
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       color: var(--text-secondary);
       font-weight: 400;
-      margin-top: 4px;
+      margin-top: 2px;
       letter-spacing: -0.01em;
     }
 
@@ -109,9 +109,9 @@
       position: relative;
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      padding: 20px 20px 16px;
-      border-radius: var(--radius-xl);
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-lg);
       background: rgba(26, 28, 38, 0.8);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
@@ -127,42 +127,43 @@
     }
 
     .pill {
-      --pill-color: var(--text-secondary);
-      --pill-border: rgba(255, 255, 255, 0.12);
-      --pill-bg: rgba(255, 255, 255, 0.03);
+      --pill-color: var(--text-muted);
+      --pill-border: rgba(255, 255, 255, 0.08);
+      --pill-bg: rgba(255, 255, 255, 0.02);
       --pill-active-start: rgba(255, 255, 255, 0.08);
       --pill-active-end: rgba(255, 255, 255, 0.04);
       --pill-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-      border-radius: 14px;
-      padding: 12px 20px;
-      font-size: 0.9375rem;
-      font-weight: 700;
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 0.8125rem;
+      font-weight: 600;
       letter-spacing: 0.04em;
-      border: 2px solid var(--pill-border);
+      border: 1.5px solid var(--pill-border);
       background: var(--pill-bg);
       color: var(--pill-color);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       user-select: none;
       transition: all 0.2s ease;
       text-transform: uppercase;
       box-shadow: var(--pill-shadow);
+      opacity: 0.6;
     }
 
     .pill--keep {
       position: relative;
-      padding-left: 20px;
+      padding-left: 14px;
     }
 
     .pill--keep::before {
       content: '★';
       position: absolute;
-      top: 8px;
-      left: 8px;
+      top: 4px;
+      left: 5px;
       color: var(--keep-color);
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
       opacity: 0.85;
     }
@@ -180,6 +181,8 @@
       color: var(--pill-color);
       box-shadow: var(--pill-shadow), 0 12px 28px rgba(0, 0, 0, 0.45);
       font-weight: 800;
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .pill-label {
@@ -239,7 +242,7 @@
     .controls-right {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 10px;
       margin-left: auto;
       align-items: center;
     }
@@ -274,12 +277,12 @@
     .search-input {
       background: rgba(15, 16, 22, 0.8);
       border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-soft);
+      border: 1px solid var(--border-soft);
       color: var(--text);
-      font-size: 0.8125rem;
+      font-size: 0.75rem;
       font-weight: 500;
-      padding: 8px 12px;
-      min-width: 180px;
+      padding: 6px 10px;
+      min-width: 160px;
       font-family: 'Inter', sans-serif;
       transition: all 0.2s ease;
     }
@@ -301,8 +304,8 @@
     .switch {
       position: relative;
       display: inline-block;
-      width: 44px;
-      height: 24px;
+      width: 36px;
+      height: 20px;
     }
     .switch input {
       opacity: 0;
@@ -319,20 +322,20 @@
       background-color: rgba(255, 255, 255, 0.08);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 34px;
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
     }
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
+      height: 14px;
+      width: 14px;
       left: 2px;
-      bottom: 1.5px;
+      bottom: 2px;
       background-color: #e9ecf5;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 50%;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
     }
     .switch input:checked + .slider {
       background: rgba(82, 130, 180, 0.18);
@@ -340,7 +343,7 @@
       box-shadow: 0 0 0 2px rgba(82, 130, 180, 0.05);
     }
     .switch input:checked + .slider:before {
-      transform: translateX(18px);
+      transform: translateX(16px);
       background-color: #f8fbff;
     }
     .compact-toggle {
@@ -364,26 +367,42 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      padding: 8px 14px;
+      margin-bottom: 8px;
+      padding: 6px 12px;
       border-radius: 999px;
       background: rgba(26, 28, 38, 0.9);
-      border: 1.5px solid var(--border);
+      border: 1px solid var(--border);
       box-shadow: var(--shadow-sm);
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .grid-panel-header__left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .grid-panel-header__right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .focus-currency-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
+      gap: 6px;
+      padding: 5px 12px;
       border-radius: 999px;
-      border: 1.5px solid rgba(67, 70, 88, 0.55);
+      border: 1px solid rgba(67, 70, 88, 0.55);
       background: rgba(26, 28, 38, 0.7);
       color: #d0d4e2;
       cursor: pointer;
-      font-size: 0.8125rem;
+      font-size: 0.75rem;
       font-weight: 600;
       white-space: nowrap;
       user-select: none;
@@ -439,18 +458,19 @@
 
     .app-main {
       display: grid;
-      grid-template-columns: minmax(0, 4fr) minmax(280px, 1.25fr);
-      gap: 16px;
+      grid-template-columns: minmax(230px, 1.1fr) minmax(0, 4fr) minmax(260px, 1.2fr);
+      gap: 12px;
       min-height: 0;
       flex: 1;
+      align-items: start;
     }
 
     .grid-panel {
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       background: rgba(26, 28, 38, 0.75);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
-      padding: 16px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       min-height: 0;
@@ -601,7 +621,7 @@
       opacity: 0.9;
       mix-blend-mode: screen;
       pointer-events: none;
-      z-index: 1;
+      z-index: 0;
     }
 
     .item-image__curve {
@@ -654,32 +674,40 @@
       height: 86%;
       object-fit: contain;
       display: block;
-      z-index: 0;
+      z-index: 2;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 2px rgba(0, 0, 0, 0.65));
     }
 
     .item-name {
-      position: absolute;
-      left: 6px;
-      right: 6px;
-      bottom: 6px;
-      padding: 3px 7px;
-      border-radius: 8px;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 0.64rem;
-      font-weight: 400;
-      color: #f1f4fa;
+      width: 100%;
+      padding: 7px 9px 6px;
+      margin-bottom: 0;
+      border-radius: var(--radius-md) var(--radius-md) var(--radius-sm) var(--radius-sm);
+      font-family: 'Rajdhani', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #eaf1ff;
       text-align: center;
-      letter-spacing: 0.04em;
-      line-height: 1.15;
+      letter-spacing: 0.06em;
+      line-height: 1.1;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      opacity: 0.92;
+      opacity: 0.95;
       text-transform: uppercase;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
-      backdrop-filter: blur(2px);
-      z-index: 3;
+      background: linear-gradient(180deg, #111827 0%, #0c1220 100%);
+      border: 1px solid rgba(40, 58, 92, 0.7);
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+        0 1px 4px rgba(0, 0, 0, 0.5);
       pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    .item-grid--compact .item-name {
+      padding: 6px 8px 5px;
+      font-size: 0.6rem;
+      letter-spacing: 0.055em;
     }
 
     #item-tooltip {
@@ -758,12 +786,11 @@
 
     .keep-star {
       position: absolute;
-      right: 6px;
-      bottom: 6px;
-      padding: 2px 5px;
+      right: 4px;
+      bottom: 4px;
+      padding: 2px 4px;
       border-radius: 7px;
       background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(246, 214, 117, 0.35);
       color: #f6d675;
       font-size: 0.72rem;
       font-weight: 600;
@@ -803,10 +830,15 @@
       top: 6px;
       left: 6px;
       color: #ffd700;
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       font-weight: 800;
       -webkit-text-stroke: 1px rgba(0, 0, 0, 0.7);
-      text-shadow: none;
+      text-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+    }
+
+    .item-tile--high-yield {
+      border-color: rgba(45, 241, 133, 0.6);
+      box-shadow: 0 0 0 1px rgba(45, 241, 133, 0.3);
     }
 
     .tile-icon {
@@ -845,16 +877,20 @@
     .sidebar {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       min-height: 0;
     }
 
+    .sidebar.sidebar--left {
+      order: -1;
+    }
+
     .panel {
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       background: rgba(26, 28, 38, 0.75);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
-      padding: 16px;
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
       min-height: 0;
@@ -862,12 +898,32 @@
     }
 
     .panel-title {
-      font-size: 0.8125rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.6875rem;
       font-weight: 700;
-      margin: 0 0 12px;
+      margin: 0 0 8px;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.08em;
+    }
+
+    .panel-title__icon {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+    }
+
+    .panel--tracking {
+      flex: 0 0 auto;
+    }
+
+    .tracking-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .panel--quests {
@@ -1090,95 +1146,79 @@
     #workstation-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      max-height: 200px;
+      gap: 4px;
+      max-height: 180px;
       overflow: auto;
       padding-right: 2px;
     }
 
     .workstation-card {
-      border: 1.5px solid var(--border-soft);
-      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
       background: rgba(15, 16, 22, 0.55);
-      padding: 8px 10px;
+      padding: 6px 8px;
       display: flex;
-      flex-direction: column;
-      gap: 5px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .workstation-card__header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      justify-content: space-between;
+      display: none;
     }
 
     .workstation-name {
-      font-size: 0.8125rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: var(--text);
       letter-spacing: 0.01em;
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .workstation-meta {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.6875rem;
-      color: var(--text-muted);
-      letter-spacing: 0.02em;
+      display: none;
     }
 
     .workstation-tier-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: rgba(82, 255, 158, 0.12);
-      border: 1px solid rgba(82, 255, 158, 0.4);
-      color: #52ff9e;
-      font-weight: 600;
-      font-size: 0.6875rem;
+      display: none;
     }
 
     .workstation-control-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+      display: none;
     }
 
     .workstation-control-label {
-      font-size: 0.6875rem;
-      color: var(--text-muted);
-      letter-spacing: 0.05em;
-      font-weight: 700;
-      text-transform: uppercase;
+      display: none;
     }
 
     .workstation-tier-select {
-      min-width: 90px;
+      min-width: 54px;
       background: rgba(15, 16, 22, 0.72);
       border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border-soft);
-      color: var(--text);
+      border: 1px solid rgba(82, 255, 158, 0.35);
+      color: #52ff9e;
       font-size: 0.6875rem;
       font-weight: 700;
-      padding: 4px 6px;
+      padding: 3px 5px;
       font-family: 'Inter', sans-serif;
       cursor: pointer;
       transition: all 0.2s ease;
+      flex-shrink: 0;
     }
 
     .workstation-tier-select:hover {
-      border-color: var(--border);
+      border-color: rgba(82, 255, 158, 0.5);
+      background: rgba(82, 255, 158, 0.08);
     }
 
     .workstation-tier-select:focus {
       outline: none;
       border-color: rgba(82, 255, 158, 0.6);
-      box-shadow: 0 0 0 3px rgba(82, 255, 158, 0.12);
+      box-shadow: 0 0 0 2px rgba(82, 255, 158, 0.1);
     }
 
     .details-content {
@@ -1210,6 +1250,13 @@
     }
     .details-name--rarity-legendary {
       color: #ffe600;
+    }
+
+    .details-special-note {
+      color: var(--recycle-color);
+      font-weight: 600;
+      margin: 0 0 6px;
+      font-size: 0.85rem;
     }
 
     .details-meta-pill {
@@ -1308,6 +1355,7 @@
       cursor: pointer;
       font-size: 0.75rem;
       font-weight: 500;
+      color: #eef2ff;
       transition: all 0.2s ease;
     }
 
@@ -1320,18 +1368,6 @@
       text-decoration: line-through;
       opacity: 0.5;
       border-color: var(--border-soft);
-    }
-
-    /* Expedition Panel - Distinct Orange/Amber Styling */
-    .panel--expedition {
-      flex: 0 0 auto;
-      background: rgba(30, 22, 15, 0.75);
-      border: 1px solid rgba(251, 146, 60, 0.25);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(251, 146, 60, 0.08);
-    }
-
-    .panel--expedition .panel-title {
-      color: #fb923c;
     }
 
     .expedition-content {
@@ -1499,6 +1535,7 @@
 
       .panel--quests,
       .panel--workstations,
+      .panel--expedition,
       .panel--details {
         flex: 1;
         min-width: 0;
@@ -1761,60 +1798,34 @@
           <input id="show-all-checkbox" type="checkbox" />
           Show all
         </label>
-
-        <label class="control-group">
-          <input id="save-quest-checkbox" type="checkbox" checked />
-          Track quests
-        </label>
-
-        <label class="control-group">
-          <input id="track-expedition-checkbox" type="checkbox" />
-          Track expedition
-        </label>
-
-        <div class="control-group control-group--sort">
-          <span>Sort:</span>
-          <select id="sort-select" class="sort-select">
-            <option value="recommended">Recommended</option>
-            <option value="rarity">Rarity</option>
-            <option value="name">Name</option>
-            <option value="valueHigh">Value ↓</option>
-            <option value="valueLow">Value ↑</option>
-          </select>
-        </div>
-
-        <input
-          id="search-input"
-          class="search-input"
-          type="search"
-          placeholder="Search items…"
-        />
       </div>
     </section>
 
     <main class="app-main">
-      <section class="grid-panel">
-        <div class="grid-panel-header">
-          <button id="focus-currency-btn" class="focus-currency-btn" data-active="false" title="Toggle currency profit tips">
-            <img id="focus-currency-icon" src="ui_img/icons_small/currency_icon_on.png" alt="Currency" />
-            <span>Focus currency</span>
-          </button>
-          <div class="compact-toggle compact-toggle--in-grid">
-            <label class="switch">
-              <input id="compact-grid-checkbox" type="checkbox" checked />
-              <span class="slider"></span>
+      <aside class="sidebar sidebar--left">
+        <section class="panel panel--tracking">
+          <h2 class="panel-title">Item Tracking</h2>
+          <div class="tracking-controls">
+            <label class="control-group">
+              <input id="save-quest-checkbox" type="checkbox" checked />
+              Track quests
             </label>
-            <span class="switch-label">Compact grid</span>
+            <label class="control-group">
+              <input id="track-workstation-checkbox" type="checkbox" checked />
+              Track workstations
+            </label>
+            <label class="control-group">
+              <input id="track-expedition-checkbox" type="checkbox" />
+              Track expedition
+            </label>
           </div>
-        </div>
-        <div id="item-grid" class="item-grid">
-          <!-- item tiles will be rendered here -->
-        </div>
-      </section>
+        </section>
 
-      <aside class="sidebar">
-        <section class="panel panel--quests">
-          <h2 class="panel-title">Active Quests</h2>
+        <section class="panel panel--quests" id="quests-panel">
+          <h2 class="panel-title">
+            <img class="panel-title__icon" src="quest_icon.png" alt="Quest icon" />
+            Active Quests
+          </h2>
           <div class="quest-search-wrapper">
             <input
               id="quest-search-input"
@@ -1832,7 +1843,10 @@
         </section>
 
         <section class="panel panel--workstations">
-          <h2 class="panel-title">Workstations</h2>
+          <h2 class="panel-title">
+            <img class="panel-title__icon" src="wrench_icon.png" alt="Workstation icon" />
+            Workstations
+          </h2>
           <div id="workstation-list">
             <!-- station rows will be rendered here -->
           </div>
@@ -1849,7 +1863,48 @@
             </div>
           </div>
         </section>
+      </aside>
 
+      <section class="grid-panel">
+        <div class="grid-panel-header">
+          <div class="grid-panel-header__left">
+            <input
+              id="search-input"
+              class="search-input"
+              type="search"
+              placeholder="Search items…"
+            />
+            <div class="control-group control-group--sort">
+              <span>Sort:</span>
+              <select id="sort-select" class="sort-select">
+                <option value="recommended">Recommended</option>
+                <option value="rarity">Rarity</option>
+                <option value="name">Name</option>
+                <option value="valueHigh">Value ↓</option>
+                <option value="valueLow">Value ↑</option>
+              </select>
+            </div>
+            <button id="focus-currency-btn" class="focus-currency-btn" data-active="false" title="Toggle currency profit tips">
+              <img id="focus-currency-icon" src="ui_img/icons_small/currency_icon_on.png" alt="Currency" />
+              <span>Focus currency</span>
+            </button>
+          </div>
+          <div class="grid-panel-header__right">
+            <div class="compact-toggle compact-toggle--in-grid">
+              <label class="switch">
+                <input id="compact-grid-checkbox" type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+              <span class="switch-label">Compact grid</span>
+            </div>
+          </div>
+        </div>
+        <div id="item-grid" class="item-grid">
+          <!-- item tiles will be rendered here -->
+        </div>
+      </section>
+
+      <aside class="sidebar sidebar--right">
         <section class="panel panel--details">
           <h2 class="panel-title">Item details</h2>
           <div id="details-content" class="details-content">

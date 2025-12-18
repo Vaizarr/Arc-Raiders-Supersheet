@@ -163,6 +163,9 @@ class QuestManager {
       
       // Auto-complete prerequisites
       this.autoCompletePrerequisites(appState, questId);
+      
+      // Auto-add next quests to tracking
+      this.autoAddNextQuests(appState, questId);
     }
     
     saveAppState(appState);
@@ -191,6 +194,42 @@ class QuestManager {
 
     if (completedCount > 0) {
       console.log(`[QuestManager] Auto-completed ${completedCount} prerequisite quest(s) for ${questId}`);
+    }
+  }
+
+  /**
+   * Auto-add next quests to tracking when a quest is completed
+   * Finds all quests that have the completed quest as a prerequisite
+   * @param {Object} appState - Application state
+   * @param {string} completedQuestId - Quest identifier that was just completed
+   */
+  autoAddNextQuests(appState, completedQuestId) {
+    const nextQuests = [];
+    
+    // Find all quests that have this quest as a prerequisite
+    for (const quest of Object.values(this.quests)) {
+      if (quest.prerequisites && quest.prerequisites.includes(completedQuestId)) {
+        // Check if all prerequisites are completed
+        const allPrereqsComplete = quest.prerequisites.every(
+          prereqId => this.isQuestCompleted(appState, prereqId)
+        );
+        
+        if (allPrereqsComplete && !this.isQuestCompleted(appState, quest.id)) {
+          nextQuests.push(quest.id);
+        }
+      }
+    }
+    
+    // Add next quests to tracking if not already tracked
+    nextQuests.forEach(questId => {
+      if (!this.isQuestSelected(appState, questId)) {
+        this.selectQuest(appState, questId);
+        console.log('[QuestManager] Auto-added next quest to tracking:', questId);
+      }
+    });
+    
+    if (nextQuests.length > 0) {
+      console.log(`[QuestManager] Auto-added ${nextQuests.length} next quest(s) after completing ${completedQuestId}`);
     }
   }
 

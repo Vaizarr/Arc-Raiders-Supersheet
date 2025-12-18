@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test - Arc Raiders Supersheet</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #0a0b0f;
+      color: #e8e9ed;
+    }
+    h1 {
+      color: #3b82f6;
+    }
+    button {
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    #output {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #1a1c26;
+      border-radius: 8px;
+      border: 1px solid #2a2d3d;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .success {
+      color: #10b981;
+    }
+    .error {
+      color: #ef4444;
+    }
+    .info {
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 API Integration Test</h1>
+  <p>Click buttons to test the MetaForge API integration</p>
+
+  <div>
+    <button onclick="testMapData()">Test Map Data (Dam)</button>
+    <button onclick="testItemLocations()">Test Item Locations</button>
+    <button onclick="testCacheInfo()">View Cache Info</button>
+    <button onclick="testClearCache()">Clear All Cache</button>
+  </div>
+
+  <div id="output">Click a button to run a test...</div>
+
+  <script type="module">
+    import { getMapData, getItemSpawnLocations, MAPS } from './map-api.js';
+    import { getCacheInfo, clearAllCaches } from './api-cache.js';
+
+    const output = document.getElementById('output');
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const className = type;
+      output.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function clearOutput() {
+      output.innerHTML = '';
+    }
+
+    // Test 1: Fetch map data
+    window.testMapData = async () => {
+      clearOutput();
+      log('Testing Map Data API...', 'info');
+      
+      try {
+        log('Fetching Dam map data...', 'info');
+        const mapData = await getMapData(MAPS.DAM);
+        
+        log('✓ Success!', 'success');
+        log(`Map: ${mapData.name || 'Dam'}`, 'info');
+        log(`Markers: ${mapData.markers?.length || 0}`, 'info');
+        log(`POIs: ${mapData.poi?.length || 0}`, 'info');
+        
+        if (mapData.markers && mapData.markers.length > 0) {
+          log('\nFirst 3 markers:', 'info');
+          mapData.markers.slice(0, 3).forEach((marker, i) => {
+            log(`  ${i + 1}. ${marker.name || marker.type} at (${marker.x}, ${marker.y})`, 'info');
+          });
+        }
+        
+        log('\n✓ Cache check: Next call will be instant!', 'success');
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+        console.error(error);
+      }
+    };
+
+    // Test 2: Find item locations
+    window.testItemLocations = async () => {
+      clearOutput();
+      log('Testing Item Location API...', 'info');
+      
+      // Test with a common item (you can change this)
+      const testItemId = 'battery'; // Change to any item ID from your data
+      
+      try {
+        log(`Searching for "${testItemId}" across all maps...`, 'info');
+        log('(This may take a moment on first run)', 'info');
+        
+        const locations = await getItemSpawnLocations(testItemId);
+        
+        if (locations.length === 0) {
+          log(`✓ No spawn locations found for "${testItemId}"`, 'info');
+          log('This is normal for quest items or crafted items', 'info');
+        } else {
+          log(`✓ Found ${locations.length} location(s)!`, 'success');
+          
+          // Group by map
+          const byMap = {};
+          locations.forEach(loc => {
+            if (!byMap[loc.map]) byMap[loc.map] = [];
+            byMap[loc.map].push(loc);
+          });
+          
+          log('\nLocations by map:', 'info');
+          for (const [map, locs] of Object.entries(byMap)) {
+            log(`\n${map.toUpperCase()}:`, 'success');
+            locs.forEach(loc => {
+              log(`  • ${loc.type} at (${loc.x}, ${loc.y})${loc.name ? ` - ${loc.name}` : ''}`, 'info');
+            });
+          }
+        }
+        
+        log('\n✓ Data is now cached for 1 hour', 'success');
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+        console.error(error);
+      }
+    };
+
+    // Test 3: View cache info
+    window.testCacheInfo = () => {
+      clearOutput();
+      log('Checking localStorage cache...', 'info');
+      
+      try {
+        const caches = getCacheInfo();
+        
+        if (caches.length === 0) {
+          log('No cached data found', 'info');
+          log('Run other tests first to populate cache', 'info');
+        } else {
+          log(`✓ Found ${caches.length} cached item(s):\n`, 'success');
+          
+          caches.forEach(cache => {
+            const status = cache.expired ? '❌ EXPIRED' : '✅ VALID';
+            log(`${status} ${cache.key}`, cache.expired ? 'error' : 'success');
+            log(`   Age: ${cache.ageMinutes} minutes`, 'info');
+            log(`   Cached: ${cache.timestamp}\n`, 'info');
+          });
+        }
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+        console.error(error);
+      }
+    };
+
+    // Test 4: Clear cache
+    window.testClearCache = () => {
+      clearOutput();
+      log('Clearing all cached API data...', 'info');
+      
+      try {
+        clearAllCaches();
+        log('✓ Cache cleared successfully!', 'success');
+        log('Next API calls will fetch fresh data', 'info');
+      } catch (error) {
+        log(`✗ Error: ${error.message}`, 'error');
+        console.error(error);
+      }
+    };
+
+    // Initial message
+    log('API integration ready!', 'success');
+    log('Click buttons above to test functionality', 'info');
+    log('\nNote: First API calls may take a few seconds', 'info');
+    log('Subsequent calls use cached data and are instant!', 'info');
+  </script>
+</body>
+</html>
