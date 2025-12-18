@@ -24,13 +24,18 @@ const DEFAULT_STATE = {
   
   // Expedition tracking
   expeditionProgress: {
-    trackExpedition: false,       // Toggle state
+    trackExpedition: false,       // Toggle state (default: OFF)
     completedPhases: {            // Phase completion status
       1: false,
       2: false,
       3: false,
       4: false,
     },
+  },
+  
+  // Workstation tracking toggle
+  workstationTracking: {
+    enabled: true,                // Toggle for workstation upgrade tracking (default: ON)
   },
   
   // Item tagging system

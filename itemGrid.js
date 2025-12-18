@@ -113,6 +113,7 @@ class ItemGrid {
       sellProfitPercent,
       isSellMoreProfitable,
       baseCategory: raw.baseCategory ?? null,
+      recyclesInto: (raw.recyclesInto && typeof raw.recyclesInto === 'object') ? raw.recyclesInto : {},
       quest: Boolean(raw.quest),
       workstations: raw.workstations || {},
       hasExpedition: Boolean(raw.hasExpedition),
